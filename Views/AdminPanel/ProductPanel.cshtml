@@ -1,0 +1,55 @@
+﻿@model ITProductECommerce.ViewModels.ProductVM
+
+@{
+    ViewData["Title"] = "ProductPanel";
+    Layout = "_ListOfProducts";
+}
+<!-- Single Page Header start -->
+@section WebsiteMap{
+    <div class="container-fluid page-header py-5">
+        <h1 class="text-center text-white display-6">Product Management</h1>
+        <ol class="breadcrumb justify-content-center mb-0">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="AdminPanel" asp-action="Index">Admin Panel</a></li>
+            <li class="breadcrumb-item active text-white">Product Management</li>
+        </ol>
+    </div>
+}
+<!-- Single Page Header End -->
+<!-- Product management start -->
+<h3 class="mb-2 display-3 text-primary">Product Manager</h3>
+
+<div class="row g-4 text-center align-items-center justify-content-center pt-4">
+    <a asp-controller="AdminPanel" asp-action="EditProduct" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Create New Product</a>
+</div>
+
+@foreach (var item in Model.Products)
+{
+    <div class="col-md-6 col-lg-6 col-xl-4">
+        <div class="rounded position-relative fruite-item">
+            <div class="fruite-img">
+                <a asp-controller="Products" asp-action="Detail" asp-route-id="@item.ProductId">
+                    <img src="~/img/Products/@item.ImageURL" class="img-fluid w-100 rounded-top" alt="@item.ProductName">
+                </a>
+            </div>
+            <div class="text-white bg-secondary px-3 py-1 rounded position-absolute" style="top: 10px; left: 10px;">@item.Category.CategoryName</div>
+            <div class="p-4 border border-secondary border-top-0 rounded-bottom">
+                <a asp-controller="Products" asp-action="Detail" asp-route-id="@item.ProductId">
+                    <h4>@item.ProductName</h4>
+                </a>
+                <p>@item.UnitDescription</p>
+                <div class="d-flex justify-content-between flex-lg-wrap">
+                    <p class="text-dark fs-5 fw-bold mb-0">$@item.UnitPrice</p>
+                </div>
+                <div class="d-flex justify-content-between flex-lg-wrap">
+                    <a asp-controller="AdminPanel" asp-action="EditProduct" asp-route-productId="@item.ProductId" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i>Edit</a>
+                    <a asp-controller="AdminPanel" asp-action="DeleteProduct" asp-route-productId="@item.ProductId" class="btn border border-secondary rounded-pill px-3 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i>Delete</a>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@await Html.PartialAsync("_ProductIndexPagination", Model)
+
+<!-- Product management end -->

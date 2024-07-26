@@ -1,0 +1,32 @@
+﻿@model ITProductECommerce.ViewModels.ProductVM
+
+@{
+    ViewData["Title"] = "_ListProvider";
+}
+
+<div class="col-lg-12">
+    <div class="mb-3">
+        <h4>Additional</h4>
+        <div class="mb-2">
+            <input asp-for="@Model.ProviderId" type="radio" class="me-2" id="Categories-1" name="providerId" value="1" form="searchForm">
+            <label for="Categories-1">HP</label>
+        </div>
+        <div class="mb-2">
+            <input asp-for="@Model.ProviderId" type="radio" class="me-2" id="Categories-2" name="providerId" value="2" form="searchForm">
+            <label for="Categories-2">Samsung</label>
+        </div>
+        <div class="mb-2">
+            <input asp-for="@Model.ProviderId" type="radio" class="me-2" id="Categories-3" name="providerId" value="3" form="searchForm">
+            <label for="Categories-3">Dell</label>
+        </div>
+        <div class="mb-2">
+            <input asp-for="@Model.ProviderId" type="radio" class="me-2" id="Categories-4" name="providerId" value="4" form="searchForm">
+            <label for="Categories-4">Sonos</label>
+        </div>
+        <div class="mb-2">
+            <input asp-for="@Model.ProviderId" type="radio" class="me-2" id="Categories-5" name="providerId" value="5" form="searchForm">
+            <label for="Categories-5">Apple</label>
+        </div>
+    </div>
+</div>
+

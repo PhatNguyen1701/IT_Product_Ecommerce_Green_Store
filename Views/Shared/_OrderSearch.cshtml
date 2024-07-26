@@ -1,0 +1,14 @@
+﻿@model ITProductECommerce.ViewModels.OrderVM
+
+@{
+    ViewData["Title"] = "_OrderSearch";
+}
+
+<form style="display: flex;" asp-controller="AdminPanel" asp-action="OrderPanel" id="orderSearch">
+    <input type="hidden" name="pageNumber" value="@Model.PageNumber" />
+    <input type="search" class="form-control p-3" placeholder="keywords" aria-describedby="search-icon-1" name="search">
+    <button style="border: none; background-color:transparent;">
+        <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+    </button>
+</form>
+

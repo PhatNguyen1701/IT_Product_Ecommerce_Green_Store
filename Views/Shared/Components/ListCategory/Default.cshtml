@@ -1,0 +1,27 @@
+﻿@model IEnumerable<ITProductECommerce.ViewModels.CategoryMenuVM>
+
+    <div class="col-md-12 col-lg-5">
+        <div id="carouselId" class="carousel slide position-relative" data-bs-ride="carousel">
+            <div class="carousel-inner" role="listbox">
+                <div class="carousel-item active rounded">
+                    <img src="~/static/category-banner-img.jpg" class="img-fluid w-100 h-100 bg-secondary rounded" alt="First slide">
+                    <a asp-controller="Products" asp-action="Index" class="btn px-4 py-2 text-white rounded">Our Category!</a>
+                </div>
+                @foreach (var item in Model)
+                {
+                    <div class="carousel-item rounded">
+                        <img src="~/img/Categories/@item.ImageURL" class="img-fluid w-100 h-100 bg-secondary rounded" alt="First slide">
+                        <a asp-controller="Products" asp-action="Index" asp-route-categoryId="@item.CategoryId" class="btn px-4 py-2 text-white rounded">@item.CategoryName</a>
+                    </div>
+                }
+            </div>
+            <button class="carousel-control-prev" type="button" data-bs-target="#carouselId" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Previous</span>
+            </button>
+            <button class="carousel-control-next" type="button" data-bs-target="#carouselId" data-bs-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="visually-hidden">Next</span>
+            </button>
+        </div>
+    </div>

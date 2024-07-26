@@ -1,0 +1,14 @@
+﻿@model ITProductECommerce.ViewModels.ProductVM
+
+@{
+    ViewData["Title"] = "Search";
+    Layout = "_ListOfProducts";
+}
+
+<h1>Search</h1>
+
+<h6>Found <b>@Model.Products.Count()</b> Results!</h6>
+
+@await Html.PartialAsync("ProductItem", Model)
+
+

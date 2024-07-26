@@ -1,0 +1,85 @@
+﻿@model ITProductECommerce.ViewModels.OrderVM
+
+@{
+    ViewData["Title"] = "OrderPanel";
+}
+
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Order Panel</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-controller="AdminPanel" asp-action="Index">Admin Panel</a></li>
+        <li class="breadcrumb-item active text-white">Order Panel</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
+<!-- Cart Page Start -->
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <div class="col-xl-3 pb-3">
+            <div class="input-group w-100 mx-auto d-flex">
+                @await Html.PartialAsync("_OrderSearch")
+            </div>
+        </div>
+        @await Html.PartialAsync("_OrderSort")
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Order ID</th>
+                        <th scope="col">Receiver Name</th>
+                        <th scope="col">Order Date</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Phone Number</th>
+                        <th scope="col">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Orders)
+                    {
+                        <tr>
+                            <td>
+                                <p class="mb-0 mt-4">
+                                    <a asp-controller="AdminPanel" asp-action="UpdateOrderDetail" asp-route-orderid="@item.OrderId">
+                                        @item.OrderId
+                                    </a>
+                                </p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.ReceiverName</p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.OrderDate</p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.Address</p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.PhoneNumber</p>
+                            </td>
+                            <td>
+                                @if (item.StatusId == 1)
+                                {
+                                    <a asp-controller="AdminPanel" asp-action="UpdateOrderDetail" asp-route-orderid="@item.OrderId" class="btn btn-md rounded-circle bg-light border mt-4">
+                                        <i class="fa fa-solid fa-arrow-right fa-xs" style="color: #0027eb;"></i>
+                                    </a>
+                                }
+                                else if (item.StatusId == 4)
+                                {
+                                    <p class="mb-0 mt-4 text-danger">Canceled</p>
+                                }
+                                else if (item.StatusId == 3)
+                                {
+                                    <p class="mb-0 mt-4" style="color: #00fa2a;">Completed</p>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @await Html.PartialAsync("_OrderIndexPagination")
+        </div>
+    </div>
+</div>
+<!-- Cart Page End -->

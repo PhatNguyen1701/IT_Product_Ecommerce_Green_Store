@@ -1,0 +1,43 @@
+﻿@model ITProductECommerce.ViewModels.ProductVM
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Admin Panel</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item active text-white">Admin Panel</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
+
+<h1 style="padding-left: 31rem; padding-top: 3rem;">Welcome Admin</h1>
+
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <h3 class="mb-4">Management Tool</h3>
+        <div class="row-g5">
+            <div class="col-md-12 col-lg-6 col-xl-7">
+                <div class="row">
+                    <div class="col-md-12 col-lg-6">
+                        <div class="form-item w-100">
+                            <a asp-controller="AdminPanel" asp-action="ProductPanel">Product Management</a>
+                        </div>
+                        <div class="form-item w-100">
+                            <a asp-controller="AdminPanel" asp-action="CategoryPanel">Category Management</a>
+                        </div>
+                        <div class="form-item w-100">
+                            <a asp-controller="AdminPanel" asp-action="OrderPanel">Order Management</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+

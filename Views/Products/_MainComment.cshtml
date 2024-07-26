@@ -1,0 +1,45 @@
+﻿@model ITProductECommerce.ViewModels.CommentVM
+
+@{
+    ViewData["Title"] = "_MainComment";
+}
+
+<form method="post" asp-controller="Products" asp-action="Comment">
+    <input asp-for="ProductId" type="hidden" />
+    <input asp-for="MainCommentId" type="hidden" />
+    <input asp-for="CustomerId" type="hidden" />
+    <input asp-for="CustomerName" type="hidden" />
+    <h4 class="mb-5 fw-bold">Leave a Reply</h4>
+    <div class="row g-4">
+        <div class="col-lg-12">
+            <div class="border-bottom rounded my-4">
+                <textarea asp-for="Message" name="message" id="message" class="form-control border-0" cols="30" rows="8" placeholder="Your Review *" spellcheck="false"></textarea>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="d-flex justify-content-between py-3 mb-5">
+                <div class="d-flex align-items-center">
+                    <p class="mb-0 me-3">Please rate:</p>
+                    <div class="d-flex align-items-center star-widget">
+                        <input asp-for="Rating" type="radio" name="rating" id="rate-5" value="5">
+                        <label for="rate-5" class="fas fa-star"></label>
+                        <input asp-for="Rating" type="radio" name="rating" id="rate-4" value="4">
+                        <label for="rate-4" class="fas fa-star"></label>
+                        <input asp-for="Rating" type="radio" name="rating" id="rate-3" value="3">
+                        <label for="rate-3" class="fas fa-star"></label>
+                        <input asp-for="Rating" type="radio" name="rating" id="rate-2" value="2">
+                        <label for="rate-2" class="fas fa-star"></label>
+                        <input asp-for="Rating" type="radio" name="rating" id="rate-1" value="1">
+                        <label for="rate-1" class="fas fa-star"></label>
+                    </div>
+                </div>
+                <button type="submit" class="btn border border-secondary text-primary rounded-pill px-4 py-3"> Post Comment</button>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+
+</script>
+
+

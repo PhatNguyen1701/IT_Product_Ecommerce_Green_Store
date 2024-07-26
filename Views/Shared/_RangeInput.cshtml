@@ -1,0 +1,14 @@
+﻿@model ITProductECommerce.ViewModels.ProductVM
+
+@{
+    ViewData["Title"] = "_RangeInput";
+}
+
+<div class="col-lg-12">
+    <div class="mb-3">
+        <h4 class="mb-2">Price</h4>
+        <input asp-for="@Model.RangeInput" type="range" class="form-range w-100" id="rangeInput" name="rangeInput" min="0" max="1000" value="0" oninput="amount.value=rangeInput.value" form="searchForm">
+        <output id="amount" name="amount" min-velue="0" max-value="1000" for="rangeInput">0</output>
+    </div>
+</div>
+

@@ -1,0 +1,338 @@
+﻿@model ITProductECommerce.ViewModels.ProductDetailVM
+@{
+    ViewData["Title"] = "Detail";
+}
+
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">@Model.ProductName</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Products" asp-action="Index">Shop</a></li>
+        <li class="breadcrumb-item active text-white">@Model.ProductName</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
+
+<!-- Single Product Start -->
+<div class="container-fluid py-5 mt-5">
+    <div class="container py-5">
+        <div class="row g-4 mb-5">
+            <div class="col-lg-8 col-xl-9">
+                <div class="row g-4">
+                    <div class="col-lg-6">
+                        <div class="border rounded">
+                            <a asp-controller="Products" asp-action="Detail" asp-route-id="@Model.ProductId">
+                                <img src="~/img/Products/@Model.ImageURL" class="img-fluid rounded" alt="Image">
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <h4 class="fw-bold mb-3">@Model.ProductName</h4>
+                        <p class="mb-3">Category: @Model.CategoryName</p>
+                        <h5 class="fw-bold mb-3">@Model.Price $</h5>
+                        <div class="d-flex mb-4">
+                            @for (int i = 1; i <= Model.AvgRating; i++)
+                            {
+                                <i class="fa fa-star text-secondary"></i>
+                            }
+                            @for (int j = Model.AvgRating; j < 5; j++)
+                            {
+                                <i class="fa fa-star"></i>
+                            }
+                        </div>
+                        <p class="mb-4">
+                            @Model.Discription
+                        </p>
+                        <form asp-controller="Cart" asp-action="AddToCart" asp-route-id="@Model.ProductId">
+                            <div class="input-group quantity mb-5" style="width: 100px;">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-sm btn-minus rounded-circle bg-light border" type="button">
+                                        <i class="fa fa-minus"></i>
+                                    </button>
+                                </div>
+                                <input type="text" class="form-control form-control-sm text-center border-0" value="1" name="quantity">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-sm btn-plus rounded-circle bg-light border" type="button">
+                                        <i class="fa fa-plus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <button class="btn border border-secondary rounded-pill px-4 py-2 mb-4 text-primary"><i class="fa fa-shopping-bag me-2 text-primary"></i> Add to cart</button>
+                        </form>
+                    </div>
+                    <div class="col-lg-12">
+                        <nav>
+                            <div class="nav nav-tabs mb-3">
+                                <button class="nav-link active border-white border-bottom-0" type="button" role="tab"
+                                        id="nav-about-tab" data-bs-toggle="tab" data-bs-target="#nav-about"
+                                        aria-controls="nav-about" aria-selected="true">
+                                    Description
+                                </button>
+                                <button class="nav-link border-white border-bottom-0" type="button" role="tab"
+                                        id="nav-mission-tab" data-bs-toggle="tab" data-bs-target="#nav-mission"
+                                        aria-controls="nav-mission" aria-selected="false">
+                                    Reviews
+                                </button>
+                            </div>
+                        </nav>
+                        <div class="tab-content mb-5">
+                            <div class="tab-pane active" id="nav-about" role="tabpanel" aria-labelledby="nav-about-tab">
+                                @Model.Detail
+                                <div class="px-2">
+                                    <div class="row g-4">
+                                        <div class="col-6">
+                                            <div class="row bg-light align-items-center text-center justify-content-center py-2">
+                                                <div class="col-6">
+                                                    <p class="mb-0">Category</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p class="mb-0">@Model.CategoryName</p>
+                                                </div>
+                                            </div>
+                                            <div class="row text-center align-items-center justify-content-center py-2">
+                                                <div class="col-6">
+                                                    <p class="mb-0">Provide Company</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p class="mb-0">@Model.ProviderName</p>
+                                                </div>
+                                            </div>
+                                            <div class="row bg-light text-center align-items-center justify-content-center py-2">
+                                                <div class="col-6">
+                                                    <p class="mb-0">Price</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p class="mb-0">@Model.Price</p>
+                                                </div>
+                                            </div>
+                                            <div class="row text-center align-items-center justify-content-center py-2">
+                                                <div class="col-6">
+                                                    <p class="mb-0">Unit in stock</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p class="mb-0">@Model.UnitInStock</p>
+                                                </div>
+                                            </div>
+                                            <div class="row bg-light text-center align-items-center justify-content-center py-2">
+                                                <div class="col-6">
+                                                    <p class="mb-0">Rating</p>
+                                                </div>
+                                                <div class="col-6">
+                                                    <p class="mb-0">@Model.AvgRating<i class="fa fa-star text-secondary"></i></p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="tab-pane" id="nav-mission" role="tabpanel" aria-labelledby="nav-mission-tab">
+                                @foreach (var c in Model.MainComments)
+                                {
+                                    <div class="d-flex">
+                                        <img src="~/img/Customers/@c.Customer.AvatarURL" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
+                                        <div class="">
+                                            <p class="mb-2" style="font-size: 14px;">@c.Created</p>
+                                            <div class="d-flex justify-content">
+                                                <h5>@c.Customer.CustomerName</h5>
+                                                <div style="padding-top: 3px; padding-left: 1.5rem;;" class="d-flex mb-3">
+                                                    @for (int i = 1; i <= c.Rating; i++)
+                                                    {
+                                                        <i class="fa fa-star text-secondary"></i>
+                                                    }
+                                                    @for (int j = c.Rating; j < 5; j++)
+                                                    {
+                                                        <i class="fa fa-star"></i>
+                                                    }
+                                                </div>
+                                            </div>
+                                            <p>
+                                                @c.Message
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div style="padding-left: 6.4rem; padding-bottom: 2rem;">
+                                        @if (User.Identity.IsAuthenticated)
+                                        {
+                                            await Html.RenderPartialAsync("_SubComment", new ITProductECommerce.ViewModels.CommentVM { ProductId = Model.ProductId, MainCommentId = c.MainCommentId, CustomerId = Model.CustomerId, CustomerName = Model.CustomerName });
+                                        }
+
+                                        @foreach (var sc in c.SubComments)
+                                        {
+                                            <div class="d-flex">
+                                                <img src="~/img/Customers/@sc.Customer.AvatarURL" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
+                                                <div class="">
+                                                    <p class="mb-2" style="font-size: 14px;">@sc.Created</p>
+                                                    <div class="d-flex justify-content-between">
+                                                        <h5>@sc.Customer.CustomerName</h5>
+                                                    </div>
+                                                    <p>
+                                                        @sc.Message
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        }
+                                    </div>
+                                }
+                            </div>
+                            <div class="tab-pane" id="nav-vision" role="tabpanel">
+                                <p class="text-dark">
+                                    @Model.Detail
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        await Html.RenderPartialAsync("_MainComment", new ITProductECommerce.ViewModels.CommentVM { ProductId = Model.ProductId, MainCommentId = 0, CustomerId = Model.CustomerId, CustomerName = Model.CustomerName });
+                    }
+                    else
+                    {
+                        <h4 class="mb-5 fw-bold"><a asp-controller="Auth" asp-action="Login">Sign In</a> to post a review!</h4>
+                    }
+                </div>
+            </div>
+            <div class="col-lg-4 col-xl-3">
+                <div class="row g-4 fruite">
+                    <div class="col-lg-12">
+                        @*@await Html.PartialAsync("_SearchPanel")*@
+                        @await Component.InvokeAsync("CategoryMenu")
+                    </div>
+                    <div class="col-lg-12">
+                        <h4 class="mb-4">Featured products</h4>
+                        <div class="d-flex align-items-center justify-content-start">
+                            <div class="rounded" style="width: 100px; height: 100px;">
+                                <img src="~/img/featur-1.jpg" class="img-fluid rounded" alt="Image">
+                            </div>
+                            <div>
+                                <h6 class="mb-2">Big Banana</h6>
+                                <div class="d-flex mb-2">
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="d-flex mb-2">
+                                    <h5 class="fw-bold me-2">2.99 $</h5>
+                                    <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-start">
+                            <div class="rounded" style="width: 100px; height: 100px;">
+                                <img src="~/img/featur-2.jpg" class="img-fluid rounded" alt="">
+                            </div>
+                            <div>
+                                <h6 class="mb-2">Big Banana</h6>
+                                <div class="d-flex mb-2">
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="d-flex mb-2">
+                                    <h5 class="fw-bold me-2">2.99 $</h5>
+                                    <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-start">
+                            <div class="rounded" style="width: 100px; height: 100px;">
+                                <img src="~/img/featur-3.jpg" class="img-fluid rounded" alt="">
+                            </div>
+                            <div>
+                                <h6 class="mb-2">Big Banana</h6>
+                                <div class="d-flex mb-2">
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="d-flex mb-2">
+                                    <h5 class="fw-bold me-2">2.99 $</h5>
+                                    <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-start">
+                            <div class="rounded me-4" style="width: 100px; height: 100px;">
+                                <img src="~/img/vegetable-item-4.jpg" class="img-fluid rounded" alt="">
+                            </div>
+                            <div>
+                                <h6 class="mb-2">Big Banana</h6>
+                                <div class="d-flex mb-2">
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="d-flex mb-2">
+                                    <h5 class="fw-bold me-2">2.99 $</h5>
+                                    <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-start">
+                            <div class="rounded me-4" style="width: 100px; height: 100px;">
+                                <img src="~/img/vegetable-item-5.jpg" class="img-fluid rounded" alt="">
+                            </div>
+                            <div>
+                                <h6 class="mb-2">Big Banana</h6>
+                                <div class="d-flex mb-2">
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="d-flex mb-2">
+                                    <h5 class="fw-bold me-2">2.99 $</h5>
+                                    <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-center justify-content-start">
+                            <div class="rounded me-4" style="width: 100px; height: 100px;">
+                                <img src="~/img/vegetable-item-6.jpg" class="img-fluid rounded" alt="">
+                            </div>
+                            <div>
+                                <h6 class="mb-2">Big Banana</h6>
+                                <div class="d-flex mb-2">
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star text-secondary"></i>
+                                    <i class="fa fa-star"></i>
+                                </div>
+                                <div class="d-flex mb-2">
+                                    <h5 class="fw-bold me-2">2.99 $</h5>
+                                    <h5 class="text-danger text-decoration-line-through">4.11 $</h5>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center my-4">
+                            <a href="#" class="btn border border-secondary px-4 py-3 rounded-pill text-primary w-100">Vew More</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="position-relative">
+                            <img src="~/static/banner-fruits.jpg" class="img-fluid w-100 rounded" alt="">
+                            <div class="position-absolute" style="top: 50%; right: 10px; transform: translateY(-50%);">
+                                <h3 class="text-secondary fw-bold">Fresh <br> Fruits <br> Banner</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <h1 class="fw-bold mb-0">Related products</h1>
+        <div class="vesitable">
+            @await Component.InvokeAsync("ListProduct")
+        </div>
+    </div>
+</div>
+<!-- Single Product End -->

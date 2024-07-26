@@ -1,0 +1,94 @@
+﻿@model ITProductECommerce.ViewModels.ProductVM
+
+@{
+    ViewData["Title"] = "_ProductIndexPagination";
+}
+
+<div class="col-12">
+    <div class="pagination d-flex justify-content-center mt-5">
+        @if (Model.PageNumber > 1)
+        {
+            if (Context.Request.Path == "/Products")
+            {
+                <a asp-controller="Products" asp-action="Index"
+                   asp-route-search="@Model.Search"
+                   asp-route-categoryId="@Model.CategoryId"
+                   asp-route-sortBy="@Model.SortBy"
+                   asp-route-rangeInput="@Model.RangeInput"
+                   asp-route-providerId="@Model.ProviderId"
+                   asp-route-pageNumber="@(Model.PageNumber - 1)" class="rounded">&laquo;</a>
+            }
+            else if (Context.Request.Path == "/AdminPanel/ProductPanel")
+            {
+                <a asp-controller="AdminPanel" asp-action="ProductPanel"
+                   asp-route-search="@Model.Search"
+                   asp-route-categoryId="@Model.CategoryId"
+                   asp-route-sortBy="@Model.SortBy"
+                   asp-route-rangeInput="@Model.RangeInput"
+                   asp-route-providerId="@Model.ProviderId"
+                   asp-route-pageNumber="@(Model.PageNumber - 1)" class="rounded">&laquo;</a>
+            }
+        }
+
+        @foreach (var p in Model.Pages)
+        {
+
+            if (p == -1)
+            {
+                <span class="three-dots">
+                    ...
+                </span>
+            }
+            else
+            {
+                if (Context.Request.Path == "/Products")
+                {
+                    <a class="@(p == Model.PageNumber ? "active rounded" : "rounded")"
+                       asp-controller="Products" asp-action="Index"
+                       asp-route-search="@Model.Search"
+                       asp-route-categoryId="@Model.CategoryId"
+                       asp-route-sortBy="@Model.SortBy"
+                       asp-route-rangeInput="@Model.RangeInput"
+                       asp-route-providerId="@Model.ProviderId"
+                       asp-route-pageNumber="@p">@p</a>
+                }
+                else if (Context.Request.Path == "/AdminPanel/ProductPanel")
+                {
+                    <a class="@(p == Model.PageNumber ? "active rounded" : "rounded")"
+                       asp-controller="AdminPanel" asp-action="ProductPanel"
+                       asp-route-search="@Model.Search"
+                       asp-route-categoryId="@Model.CategoryId"
+                       asp-route-sortBy="@Model.SortBy"
+                       asp-route-rangeInput="@Model.RangeInput"
+                       asp-route-providerId="@Model.ProviderId"
+                       asp-route-pageNumber="@p">@p</a>
+                }
+            }
+        }
+
+        @if (Model.NextPage)
+        {
+            if (Context.Request.Path == "/Products")
+            {
+                <a asp-controller="Products" asp-action="Index"
+                   asp-route-search="@Model.Search"
+                   asp-route-categoryId="@Model.CategoryId"
+                   asp-route-sortBy="@Model.SortBy"
+                   asp-route-rangeInput="@Model.RangeInput"
+                   asp-route-providerId="@Model.ProviderId"
+                   asp-route-pageNumber="@(Model.PageNumber + 1)" class="rounded">&raquo;</a>
+            }
+            else if (Context.Request.Path == "/AdminPanel/ProductPanel")
+            {
+                <a asp-controller="AdminPanel" asp-action="ProductPanel"
+                   asp-route-search="@Model.Search"
+                   asp-route-categoryId="@Model.CategoryId"
+                   asp-route-sortBy="@Model.SortBy"
+                   asp-route-rangeInput="@Model.RangeInput"
+                   asp-route-providerId="@Model.ProviderId"
+                   asp-route-pageNumber="@(Model.PageNumber + 1)" class="rounded">&raquo;</a>
+            }
+        }
+    </div>
+</div>
+

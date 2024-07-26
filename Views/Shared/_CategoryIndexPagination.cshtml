@@ -1,0 +1,63 @@
+﻿@model ITProductECommerce.ViewModels.CategoryVM
+
+@{
+    ViewData["Title"] = "_CategoryIndexPagination";
+}
+<div class="col-12">
+    <div class="pagination d-flex justify-content-center mt-5">
+        @if (Model.PageNumber > 1)
+        {
+            if (Context.Request.Path == "/Category")
+            {
+                <a asp-controller="Category" asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageNumber - 1)" class="rounded">&laquo;</a>
+            }
+            else if (Context.Request.Path == "/AdminPanel/CategoryPanel")
+            {
+                <a asp-controller="AdminPanel" asp-action="CategoryPanel"
+                   asp-route-pageNumber="@(Model.PageNumber - 1)" class="rounded">&laquo;</a>
+            }
+        }
+
+        @foreach (var p in Model.Pages)
+        {
+
+            if (p == -1)
+            {
+                <span class="three-dots">
+                    ...
+                </span>
+            }
+            else
+            {
+                if (Context.Request.Path == "/Category")
+                {
+                    <a class="@(p == Model.PageNumber ? "active rounded" : "rounded")"
+                       asp-controller="Category" asp-action="Index"
+                       asp-route-pageNumber="@p">@p</a>
+                }
+                else if (Context.Request.Path == "/AdminPanel/CategoryPanel")
+                {
+                    <a class="@(p == Model.PageNumber ? "active rounded" : "rounded")"
+                       asp-controller="AdminPanel" asp-action="CategoryPanel"
+                       asp-route-pageNumber="@p">@p</a>
+                }
+            }
+        }
+
+        @if (Model.NextPage)
+        {
+            if (Context.Request.Path == "/Category")
+            {
+                <a asp-controller="Category" asp-action="Index"
+                   asp-route-pageNumber="@(Model.PageNumber + 1)" class="rounded">&raquo;</a>
+            }
+            else if (Context.Request.Path == "/AdminPanel/CategoryPanel")
+            {
+                <a asp-controller="AdminPanel" asp-action="CategoryPanel"
+                   asp-route-pageNumber="@(Model.PageNumber + 1)" class="rounded">&raquo;</a>
+            }
+        }
+    </div>
+</div>
+

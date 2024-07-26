@@ -1,0 +1,67 @@
+﻿@model ITProductECommerce.ViewModels.UserProfileVM
+
+@{
+    ViewData["Title"] = "UserProfile";
+}
+
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">@Model.CustomerName</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item active text-white">@Model.CustomerName</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
+
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <h1 class="mb-4">@Model.CustomerName Profile</h1>
+        <div class="row-g5">
+            <div class="col-md-12 col-lg-6 col-xl-7">
+                <div class="row">
+                    <div class="form-item" style="display: flex;">
+                        <label asp-for="@Model.CustomerId" class="form-label my-3"></label>
+                        <p style="color: green; font-weight: bold; margin-left: 12.7rem; margin-top: 1rem;">@Model.CustomerId</p>
+                    </div>
+                    <div class="form-item" style="display: flex;">
+                        <label class="form-label my-3" asp-for="@Model.CustomerName"></label><p style="color: green; font-weight: bold; margin-left: 10rem; margin-top: 1rem;">@Model.CustomerName</p>
+                    </div>
+                    <div class="form-item" style="display: flex;">
+                        <label class="form-label my-3" asp-for="@Model.Gender"></label>
+                        @if (Model.Gender == true)
+                        {
+                            <p style="color: green; font-weight: bold; margin-left: 14.2rem; margin-top: 1rem;">Male</p>
+                        }
+                        else
+                        {
+                            <p style="color: green; font-weight: bold; margin-left: 14.2rem; margin-top: 1rem;">Female</p>
+                        }
+                    </div>
+                    <div class="form-item" style="display: flex;">
+                        <label class="form-label my-3" asp-for="@Model.DoB"></label>
+                        <p style="color: green; font-weight: bold; margin-left: 11.7rem; margin-top: 1rem;">@Model.DoB</p>
+                    </div>
+                    <div class="form-item" style="display: flex;">
+                        <label class="form-label my-3" asp-for="@Model.Address"></label>
+                        <p style="color: green; font-weight: bold; margin-left: 13.7rem; margin-top: 1rem;">@Model.Address</p>
+                    </div>
+                    <div class="form-item" style="display: flex;">
+                        <label class="form-label my-3" asp-for="@Model.PhoneNumber"></label>
+                        <p style="color: green; font-weight: bold; margin-left: 10.4rem; margin-top: 1rem;">@Model.PhoneNumber</p>
+                    </div>
+                    <div class="form-item" style="display: flex;">
+                        <label class="form-label my-3" asp-for="@Model.Email"></label>
+                        <p style="color: green; font-weight: bold; margin-left: 14.9rem; margin-top: 1rem;">@Model.Email</p>
+                    </div>
+                </div>
+                <div class="row g-4 text-center align-items-center justify-content-center pt-4">
+                    <a asp-controller="Auth" asp-action="UpdateUserProfile" asp-route-customerId="@Model.CustomerId" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Update Profile</a>
+                </div>
+                <div class="row g-4 text-center align-items-center justify-content-center pt-4">
+                    <a asp-controller="Auth" asp-action="Logout" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

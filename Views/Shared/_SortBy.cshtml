@@ -1,0 +1,19 @@
+﻿@model ITProductECommerce.ViewModels.ProductVM
+
+@{
+    ViewData["Title"] = "_SortBy";
+}
+
+<div class="col-xl-3">
+    <div class="bg-light ps-3 py-3 rounded d-flex justify-content-between mb-4">
+        <label for="fruits">Default Sorting:</label>
+        <select asp-for="@Model.SortBy" id="sortBy" name="sortBy" class="border-0 form-select-sm bg-light me-3" form="searchForm">
+            <option value="">Nothing</option>
+            <option value="name_asc">Name Ascending</option>
+            <option value="name_desc">Name Descending</option>
+            <option value="most_favorite">Most Favorite</option>
+            <option value="most_viewed">Most Viewed</option>
+        </select>
+    </div>
+</div>
+

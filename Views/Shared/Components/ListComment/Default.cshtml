@@ -1,0 +1,36 @@
+﻿@model IEnumerable<ITProductECommerce.ViewModels.CommentVM>
+
+<div class="owl-carousel testimonial-carousel">
+    @foreach (var item in Model)
+    {
+        <div class="testimonial-item img-border-radius bg-light rounded p-4">
+            <div class="position-relative">
+                <i class="fa fa-quote-right fa-2x text-secondary position-absolute" style="bottom: 30px; right: 0;"></i>
+                <div class="mb-4 pb-4 border-bottom border-secondary">
+                    <p class="mb-0">
+                        @item.Message
+                    </p>
+                </div>
+                <div class="d-flex align-items-center flex-nowrap">
+                    <div class="bg-secondary rounded">
+                        <img src="~/img/Customers/@item.ImageURL" class="img-fluid rounded" style="width: 100px; height: 100px;" alt="">
+                    </div>
+                    <div class="ms-4 d-block">
+                        <h4 class="text-dark">@item.CustomerName</h4>
+                        <a asp-controller="Products" asp-action="Detail" asp-route-id="@item.ProductId"><p class="m-0 pb-3">Rated for @item.ProductName</p></a>
+                        <div class="d-flex pe-5">
+                            @for (int i = 1; i <= item.Rating; i++)
+                            {
+                                <i class="fa fa-star text-primary"></i>
+                            }
+                            @for (int j = item.Rating; j < 5; j++)
+                            {
+                                <i class="fa fa-star"></i>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>

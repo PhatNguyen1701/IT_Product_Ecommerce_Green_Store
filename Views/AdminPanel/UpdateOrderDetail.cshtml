@@ -1,0 +1,73 @@
+﻿@model ITProductECommerce.ViewModels.OrderDetailVM
+
+@{
+    ViewData["Title"] = "UpdateOrderDetail";
+}
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">@Model.OrderId Details</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-controller="AdminPanel" asp-action="Index">Admin Panel</a></li>
+        <li class="breadcrumb-item"><a asp-controller="AdminPanel" asp-action="OrderPanel">Order Panel</a></li>
+        <li class="breadcrumb-item active text-white">@Model.OrderId Details</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
+
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <h1 class="mb-4">Billing details</h1>
+        <form method="post" asp-controller="AdminPanel" asp-action="UpdateOrderDetail">
+            <div class="row g-5">
+                <div class="col-md-12 col-lg-6 col-xl-7 id="pdforder"">
+                    <div class="form-item delivery-info">
+                        <label class="form-label my-3">Order ID<sup>*</sup></label>
+                        <input asp-for="@Model.OrderId" type="text" name="OrderId" class="form-control" readonly>
+                    </div>
+                    <div class="form-item delivery-info">
+                        <label class="form-label my-3">Order Date<sup>*</sup></label>
+                        <input asp-for="@Model.OrderDate" class="form-control" readonly>
+                    </div>
+                    <div class="form-item delivery-info">
+                        <label class="form-label my-3">Receiver's Name<sup>*</sup></label>
+                        <input asp-for="@Model.ReceiverName" type="text" name="ReceiverName" class="form-control">
+                    </div>
+                    <div class="form-item delivery-info">
+                        <label class="form-label my-3">Address <sup>*</sup></label>
+                        <input asp-for="@Model.Address" type="text" name="Address" class="form-control" placeholder="House Number Street Name">
+                    </div>
+                    <div class="form-item delivery-info">
+                        <label class="form-label my-3">Phone Number<sup>*</sup></label>
+                        <input asp-for="@Model.PhoneNumber" type="text" name="PhoneNumber" class="form-control">
+                    </div>
+                    <div class="form-item delivery-info">
+                        <label class="form-label my-3">Type Shipping<sup>*</sup></label>
+                        <input asp-for="@Model.TypeShipping" type="text" name="TypeShipping" class="form-control">
+                    </div>
+                    <div class="form-item delivery-info">
+                        <label class="form-label my-3">Payment Method<sup>*</sup></label>
+                        <input asp-for="@Model.PaymentMethod" type="text" name="PaymentMethod" class="form-control">
+                    </div>
+                    <div class="form-item delivery-info">
+                        <label class="form-label my-3">Status<sup>*</sup></label>
+                        <input asp-for="@Model.StatusId" type="text" name="StatusId" class="form-control">
+                    </div>
+                    <hr>
+                    <div class="form-item">
+                        <textarea asp-for="@Model.Note" name="Note" class="form-control" spellcheck="false" cols="30" rows="11" placeholder="Oreder Notes (Optional)"></textarea>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-6 col-xl-5 pt-5">
+                    <div class="row g-4 text-center align-items-center justify-content-center pt-4">
+                        <button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Update This Order</button>
+                    </div>
+                    <div class="row g-4 text-center align-items-center justify-content-center pt-4">
+                        <button asp-controller="AdminPanel" asp-action="CreateOrderPdf" asp-route-orderId="@Model.OrderId" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Print shipping label </button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
