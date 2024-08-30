@@ -19,7 +19,7 @@
         <h1 class="mb-4">Login</h1>
         <form asp-action="Login" asp-route-returnurl="@ViewBag.ReturnURL">
             <div class="text-danger" asp-validation-summary="All"></div>
-            <div class="row-g5">
+            <div class="row g-5">
                 <div class="col-md-12 col-lg-6 col-xl-7">
                     <div class="row">
                         <div class="col-md-12 col-lg-6">
@@ -32,7 +32,8 @@
                         <div class="col-md-12 col-lg-6">
                             <div class="form-item w-100">
                                 <label asp-for="@Model.Password" class="form-label my-3"></label><sup>*</sup>
-                                <input asp-for="@Model.Password" type="password" class="form-control">
+                                <input asp-for="@Model.Password" type="password" class="form-control" id="password-field">
+                                <span toggle="#password-field" class="fa fa-fw fa-eye field-icon toggle-password"></span>
                                 <span asp-validation-for="@Model.Password" class="text-danger"></span>
                             </div>
                         </div>
@@ -41,10 +42,26 @@
                         <button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Login</button>
                         <p>Not have an account yet? <a asp-controller="Auth" asp-action="Register">Register now!</a></p>
                         <a asp-controller="Auth" asp-action="ForgetPassword" class="btn border-danger">Forget Password?</a>
+                        <a asp-controller="Auth" asp-action="StaffLogin" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Login as staff</a>
                     </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
+
+@section Scripts{
+    <script>
+        $(".toggle-password").click(function () {
+
+            $(this).toggleClass("fa-eye fa-eye-slash");
+            var input = $($(this).attr("toggle"));
+            if (input.attr("type") == "password") {
+                input.attr("type", "text");
+            } else {
+                input.attr("type", "password");
+            }
+        });
+    </script>
+}
 

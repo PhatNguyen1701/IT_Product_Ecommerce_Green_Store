@@ -93,35 +93,7 @@ namespace ITProductECommerce.Controllers
                         }
                         else
                         {
-                            if (customer.Role == 1)
-                            {
-                                var claims = new List<Claim>
-                                {
-                                    new Claim(ClaimTypes.Email, customer.Email),
-                                    new Claim(ClaimTypes.Name, customer.CustomerName),
-                                    new Claim(ClaimTypes.NameIdentifier, customer.CustomerId),
-
-                                    //claim động cho phần role
-                                    new Claim(ClaimTypes.Role, "Admin")
-                                };
-                                var claimsIdentity = new ClaimsIdentity(claims,
-                                    CookieAuthenticationDefaults.AuthenticationScheme);
-                                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-                                await HttpContext.SignInAsync(claimsPrincipal);
-
-                                if (Url.IsLocalUrl(returnURL))
-                                {
-                                    return Redirect(returnURL);
-                                }
-                                else
-                                {
-                                    return RedirectToAction("Index", "AdminPanel");
-                                }
-                            }
-                            else
-                            {
-                                var claims = new List<Claim>
+                            var claims = new List<Claim>
                                 {
                                     new Claim(ClaimTypes.Email, customer.Email),
                                     new Claim(ClaimTypes.Name, customer.CustomerName),
@@ -130,20 +102,103 @@ namespace ITProductECommerce.Controllers
                                     //claim động cho phần role
                                     new Claim(ClaimTypes.Role, "Customer")
                                 };
-                                var claimsIdentity = new ClaimsIdentity(claims,
-                                    CookieAuthenticationDefaults.AuthenticationScheme);
-                                var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+                            var claimsIdentity = new ClaimsIdentity(claims,
+                                CookieAuthenticationDefaults.AuthenticationScheme);
+                            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-                                await HttpContext.SignInAsync(claimsPrincipal);
+                            await HttpContext.SignInAsync(claimsPrincipal);
 
-                                if (Url.IsLocalUrl(returnURL))
+                            if (Url.IsLocalUrl(returnURL))
+                            {
+                                return Redirect(returnURL);
+                            }
+                            else
+                            {
+                                return Redirect("/");
+                            }
+                        }
+                    }
+                }
+            }
+            return View(login);
+        }
+
+        [HttpGet]
+        public IActionResult StaffLogin(string? returnURL)
+        {
+            ViewBag.ReturnURL = returnURL;
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> StaffLogin(LoginVM login, string? returnURL)
+        {
+            ViewBag.ReturnURL = returnURL;
+            if (ModelState.IsValid)
+            {
+                var staff = _context.Staff.SingleOrDefault(c => c.StaffId == login.Username);
+                if (staff == null)
+                {
+                    ModelState.AddModelError("Error", "Staff's account was not found!");
+                }
+                else
+                {
+                    if (staff.Password != login.Password.ToMd5Hash(staff.RandomKey))
+                    {
+                        ModelState.AddModelError("Error", "Password was incorrect!");
+                    }
+                    else
+                    {
+                        if (staff.RoleId == 1)
+                        {
+                            var claims = new List<Claim>
                                 {
-                                    return Redirect(returnURL);
-                                }
-                                else
+                                    new Claim(ClaimTypes.Email, staff.Email),
+                                    new Claim(ClaimTypes.Name, staff.StaffName),
+                                    new Claim(ClaimTypes.NameIdentifier, staff.StaffId),
+
+                                    //claim động cho phần role
+                                    new Claim(ClaimTypes.Role, "Admin")
+                                };
+                            var claimsIdentity = new ClaimsIdentity(claims,
+                                CookieAuthenticationDefaults.AuthenticationScheme);
+                            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                            await HttpContext.SignInAsync(claimsPrincipal);
+
+                            if (Url.IsLocalUrl(returnURL))
+                            {
+                                return Redirect(returnURL);
+                            }
+                            else
+                            {
+                                return RedirectToAction("Index", "AdminPanel");
+                            }
+                        }
+                        else
+                        {
+                            var claims = new List<Claim>
                                 {
-                                    return Redirect("/");
-                                }
+                                    new Claim(ClaimTypes.Email, staff.Email),
+                                    new Claim(ClaimTypes.Name, staff.StaffName),
+                                    new Claim(ClaimTypes.NameIdentifier, staff.StaffId),
+
+                                    //claim động cho phần role
+                                    new Claim(ClaimTypes.Role, "Staff")
+                                };
+                            var claimsIdentity = new ClaimsIdentity(claims,
+                                CookieAuthenticationDefaults.AuthenticationScheme);
+                            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+                            await HttpContext.SignInAsync(claimsPrincipal);
+
+                            if (Url.IsLocalUrl(returnURL))
+                            {
+                                return Redirect(returnURL);
+                            }
+                            else
+                            {
+                                return RedirectToAction("Index", "AdminPanel");
                             }
                         }
                     }
@@ -217,13 +272,13 @@ namespace ITProductECommerce.Controllers
         }
 
         [Authorize]
-        public IActionResult DeleteUser(string customerId)
+        public IActionResult DeleteUser(string userId)
         {
-            var data = _repository.DeleteUser(customerId);
+            var data = _repository.DeleteUser(userId);
 
             if (data == false)
             {
-                TempData["Message"] = $"This {customerId} ID of user was not found!";
+                TempData["Message"] = $"This {userId} ID of user was not found!";
                 return Redirect("/404");
             }
             else

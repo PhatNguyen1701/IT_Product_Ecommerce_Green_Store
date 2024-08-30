@@ -30,16 +30,25 @@ namespace ITProductECommerce.Services.Repositories
         RegisterVM Register(RegisterVM register, IFormFile image);
         Customer GetUserById(string customerId);
         bool UpdateUserProfile(UserProfileVM userProfile, IFormFile image);
-        bool DeleteUser(string customerId);
+        bool DeleteUser(string userId);
         UserProfileVM GetUserProfile(string customerName);
         #endregion
 
         #region Category
         CategoryVM GetAllCategory(string? search, int pageNumber);
+        List<Category> GetAllCategory();
         Category GetCategoryById(int categoryId);
         void AddCategory(CategoryVM category, IFormFile image);
         bool UpdateCategory(CategoryVM category, IFormFile image);
         bool DeleteCategory(int categoryId);
+        #endregion
+
+        #region Provider
+        List<Provider> GetAllProvider();
+        #endregion
+
+        #region Status
+        List<Status> GetAllStatus();
         #endregion
 
         #region Comment
@@ -50,6 +59,27 @@ namespace ITProductECommerce.Services.Repositories
         OrderVM GetAllOrder(string? search, int pageNumber, string? sortBy);
         Order GetOrderById(int orderId);
         bool UpdateOrderDetail(OrderDetailVM orderDetailVM);
+        #endregion
+
+        #region Role
+        List<Role> GetAllRole();
+        #endregion
+
+        #region Staff Management
+        StaffViewModel GetAllStaff(string? search, int pageNumber);
+        void AddStaff(StaffViewModel staff, IFormFile image);
+        bool UpdateStaff(StaffViewModel staff, IFormFile image);
+        Staff GetStaffById(string staffId);
+        bool DeleteStaff(string staffId);
+        #endregion
+
+        #region Discount Program
+        DiscountProgramVM GettAllDiscount(string? search, int pageNumber);
+        void AddDiscount(DiscountProgramVM discount, IFormFile image);
+        bool UpdateDiscount(DiscountProgramVM discount, IFormFile image);
+        DiscountProgram GetDiscountById(int discountId);
+        DiscountProgramVM GetDetailDiscount(int discountId);
+        bool DeleteDiscount(int discountId);
         #endregion
     }
 }

@@ -251,3 +251,4 @@ D:\MyProjects\ITProductECommerce\ITProductECommerce\obj\Release\net8.0\refint\IT
 D:\MyProjects\ITProductECommerce\ITProductECommerce\obj\Release\net8.0\ITProductECommerce.pdb
 D:\MyProjects\ITProductECommerce\ITProductECommerce\obj\Release\net8.0\ITProductECommerce.genruntimeconfig.cache
 D:\MyProjects\ITProductECommerce\ITProductECommerce\obj\Release\net8.0\ref\ITProductECommerce.dll
+D:\MyProjects\ITProductECommerce\ITProductECommerce\obj\Release\net8.0\ITProductECommerce.sourcelink.json

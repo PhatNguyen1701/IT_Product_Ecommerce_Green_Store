@@ -1,0 +1,39 @@
+﻿@model ITProductECommerce.ViewModels.StaffViewModel
+
+@{
+    ViewData["Title"] = "_StaffIndexPagination";
+}
+
+<div class="col-12">
+    <div class="pagination d-flex justify-content-center mt-5">
+        @if (Model.PageNumber > 1)
+        {
+            <a asp-controller="AdminPanel" asp-action="StaffPanel"
+               asp-route-pageNumber="@(Model.PageNumber - 1)" class="rounded">&laquo;</a>
+        }
+
+        @foreach (var p in Model.Pages)
+        {
+
+            if (p == -1)
+            {
+                <span class="three-dots">
+                    ...
+                </span>
+            }
+            else
+            {
+                <a class="@(p == Model.PageNumber ? "active rounded" : "rounded")"
+                   asp-controller="AdminPanel" asp-action="StaffPanel"
+                   asp-route-pageNumber="@p">@p</a>
+            }
+        }
+
+        @if (Model.NextPage)
+        {
+            <a asp-controller="AdminPanel" asp-action="StaffPanel"
+               asp-route-pageNumber="@(Model.PageNumber + 1)" class="rounded">&raquo;</a>
+        }
+    </div>
+</div>
+

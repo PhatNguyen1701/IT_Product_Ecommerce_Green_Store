@@ -1,4 +1,5 @@
 ﻿using ITProductECommerce.Data;
+using System.Reflection;
 
 namespace ITProductECommerce.ViewModels
 {
@@ -27,5 +28,7 @@ namespace ITProductECommerce.ViewModels
         public string? SortBy { get; set; }
         public int RangeInput { get; set; }
         public int UnitInStock { get; set; }
+        public IEnumerable<Category> Categories { get; set; }
+        public IEnumerable<Provider> Providers { get; set; }
     }
 }

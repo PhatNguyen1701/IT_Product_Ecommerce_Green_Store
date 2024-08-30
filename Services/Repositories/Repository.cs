@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Authentication;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using System.Globalization;
+using System.Net;
 
 namespace ITProductECommerce.Services.Repositories
 {
@@ -179,6 +180,7 @@ namespace ITProductECommerce.Services.Repositories
         {
             return _context.Products
                 .Include(p => p.Category)
+                .Include(p => p.Provider)
                 .FirstOrDefault(p => p.ProductId == productId);
         }
 
@@ -374,7 +376,7 @@ namespace ITProductECommerce.Services.Repositories
                 PaymentMethod = "COD",
                 TypeShipping = "GRAB",
                 StatusId = 1,
-                StaffId = "noven@gamil.com",
+                StaffId = "",
                 Note = checkoutVM.Note
             };
 
@@ -419,7 +421,7 @@ namespace ITProductECommerce.Services.Repositories
             customer.RandomKey = Util.GenerateRandomKey();
             customer.Password = register.Password.ToMd5Hash(customer.RandomKey);
             customer.IsActive = true;
-            customer.Role = 0;
+            customer.RoleId = 4;
 
             if (image != null)
             {
@@ -497,9 +499,9 @@ namespace ITProductECommerce.Services.Repositories
             return false;
         }
 
-        public bool DeleteUser(string customerId)
+        public bool DeleteUser(string userId)
         {
-            var customer = _context.Customers.SingleOrDefault(c => c.CustomerId.Equals(customerId));
+            var customer = _context.Customers.SingleOrDefault(c => c.CustomerId.Equals(userId));
 
             if (customer != null)
             {
@@ -542,6 +544,11 @@ namespace ITProductECommerce.Services.Repositories
                 .ToList()
                 .OrderBy(c => c.CategoryName)
             };
+        }
+
+        public List<Category> GetAllCategory()
+        {
+            return _context.Categories.ToList();
         }
 
         public Category GetCategoryById(int categoryId)
@@ -598,6 +605,24 @@ namespace ITProductECommerce.Services.Repositories
             }
 
             return false;
+        }
+
+        #endregion
+
+        #region Provider
+
+        public List<Provider> GetAllProvider()
+        {
+            return _context.Providers.ToList();
+        }
+
+        #endregion
+
+        #region Status
+
+        public List<Status> GetAllStatus()
+        {
+            return _context.Statuses.ToList();
         }
 
         #endregion
@@ -677,9 +702,253 @@ namespace ITProductECommerce.Services.Repositories
                 _orderDetail.TypeShipping = orderDetailVM.TypeShipping;
                 _orderDetail.PaymentMethod = orderDetailVM.PaymentMethod;
                 _orderDetail.StatusId = orderDetailVM.StatusId;
+                _orderDetail.StaffId = orderDetailVM.StaffId;
                 _orderDetail.Note = orderDetailVM.Note;
 
                 _context.Update(_orderDetail);
+                _context.SaveChanges();
+
+                return true;
+            }
+
+            return false;
+        }
+        #endregion
+
+        public List<Role> GetAllRole()
+        {
+            return _context.Roles.ToList();
+        }
+
+        #region Staff Management
+
+        public StaffViewModel GetAllStaff(string? search, int pageNumber)
+        {
+            int pageSize = 9;
+            int skipAmount = pageSize * (pageNumber - 1);
+
+            var staffs = _context.Staff
+                .AsQueryable().AsNoTracking();
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                staffs = staffs.Where(o => EF.Functions.Like(o.StaffName, $"%{search}%") ||
+                    EF.Functions.Like(o.Email, $"%{search}%"));
+            }
+
+            int orderCount = staffs.Count();
+            int pageCount = (int)Math.Ceiling((double)orderCount / pageSize);
+
+            return new StaffViewModel
+            {
+                PageNumber = pageNumber,
+                PageCount = pageCount,
+                NextPage = orderCount > skipAmount + pageSize,
+                Pages = PageHelper.PageNumbers(pageNumber, pageCount).ToList(),
+                Search = search,
+                Staffs = staffs
+                .Skip(skipAmount)
+                .Take(pageSize)
+                .ToList()
+            };
+        }
+
+        public void AddStaff(StaffViewModel staff, IFormFile image)
+        {
+            var _staff = new Staff
+            {
+                StaffId = staff.StaffId,
+                StaffName = staff.StaffName,
+                Email = staff.Email,
+                Gender = staff.Gender,
+                Address = staff.Address,
+                DoB = staff.DoB,
+                PhoneNumber = staff.PhoneNumber,
+                RoleId = 3,
+                IsActive = true
+            };
+            _staff.RandomKey = Util.GenerateRandomKey();
+            _staff.Password = staff.Password.ToMd5Hash(_staff.RandomKey);
+
+            if (image != null)
+            {
+                _staff.AvatarURL = Util.UploadImage(image, "Staff");
+            }
+
+            _context.Add(_staff);
+            _context.SaveChanges();
+        }
+
+        public bool UpdateStaff(StaffViewModel staff, IFormFile image)
+        {
+            var _staff = _context.Staff.SingleOrDefault(s => s.StaffId.Equals(staff.StaffId));
+
+            if (_staff != null)
+            {
+                if (staff.Password == null)
+                {
+                    _staff.Password = _staff.Password;
+                }
+                else
+                {
+                    _staff.Password = staff.Password.ToMd5Hash(_staff.RandomKey);
+                }
+                _staff.StaffName = staff.StaffName;
+                _staff.Email = staff.Email;
+                _staff.Gender = staff.Gender;
+                _staff.Address = staff.Address;
+                _staff.DoB = staff.DoB;
+                _staff.PhoneNumber = staff.PhoneNumber;
+                if (image != null)
+                {
+                    _staff.AvatarURL = Util.UploadImage(image, "Staff");
+                }
+
+                _context.Update(_staff);
+                _context.SaveChanges();
+
+                return true;
+            }
+            return false;
+        }
+
+        public Staff GetStaffById(string staffId)
+        {
+            return _context.Staff.SingleOrDefault(s => s.StaffId.Equals(staffId));
+        }
+
+        public bool DeleteStaff(string staffId)
+        {
+            var staff = _context.Staff.SingleOrDefault(s => s.StaffId.Equals(staffId));
+
+            if(staff != null)
+            {
+                _context.Remove(staff);
+                _context.SaveChanges();
+
+                return true;
+            }
+            return false;
+        }
+
+        #endregion
+
+        #region Discount Program
+
+        public DiscountProgramVM GettAllDiscount(string? search, int pageNumber)
+        {
+            int pageSize = 9;
+            int skipAmount = pageSize * (pageNumber - 1);
+
+            var discounts = _context.DiscountPrograms
+                .AsQueryable()
+                .AsNoTracking();
+
+
+            if (!String.IsNullOrEmpty(search))
+            {
+                discounts = discounts.Where(d => EF.Functions.Like(d.DiscountId.ToString(), $"%{search}%") ||
+                    EF.Functions.Like(d.Title, $"%{search}%") ||
+                    EF.Functions.Like(d.Content, $"%{search}%") ||
+                    EF.Functions.Like(d.CouponCode, $"%{search}%"));
+            }
+
+            int orderCount = discounts.Count();
+            int pageCount = (int)Math.Ceiling((double)orderCount / pageSize);
+
+            return new DiscountProgramVM
+            {
+                PageNumber = pageNumber,
+                PageCount = pageCount,
+                NextPage = orderCount > skipAmount + pageSize,
+                Pages = PageHelper.PageNumbers(pageNumber, pageCount).ToList(),
+                Search = search,
+                DiscountPrograms = discounts
+                .Skip(skipAmount)
+                .Take(pageSize)
+                .ToList()
+                .OrderByDescending(d => d.DiscountId)
+            };
+        }
+
+        public void AddDiscount(DiscountProgramVM discount, IFormFile image)
+        {
+            var _discount = new DiscountProgram
+            {
+                Title = discount.Title,
+                Content = discount.Content,
+                Start = discount.Start,
+                End = discount.End,
+                CouponCode = discount.CouponCode,
+                DiscountPercent = discount.DiscountPercent,
+                IsActive = discount.IsActive
+            };
+
+            if(image != null)
+            {
+                _discount.BannerImg = Util.UploadImage(image, "Discounts");
+            }
+
+            _context.Add(_discount);
+            _context.SaveChanges();
+        }
+
+        public bool UpdateDiscount(DiscountProgramVM discount, IFormFile image)
+        {
+            var _discount = _context.DiscountPrograms.SingleOrDefault(d => d.DiscountId == discount.DiscountId);
+
+            if(_discount != null)
+            {
+                _discount.Title = discount.Title;
+                _discount.Content = discount.Content;
+                _discount.Start = discount.Start;
+                _discount.End = discount.End;
+                _discount.CouponCode = discount.CouponCode;
+                _discount.DiscountPercent = discount.DiscountPercent;
+                _discount.IsActive = discount.IsActive;
+                if(image != null)
+                {
+                    _discount.BannerImg = Util.UploadImage(image, "Discounts");
+                }
+
+                _context.Update(_discount);
+                _context.SaveChanges();
+
+                return true;
+            }
+
+            return false;
+        }
+
+        public DiscountProgram GetDiscountById(int discountId)
+        {
+            return _context.DiscountPrograms.SingleOrDefault(d => d.DiscountId == discountId);
+        }
+
+        public DiscountProgramVM GetDetailDiscount(int discountId)
+        {
+            var discount = _context.DiscountPrograms.SingleOrDefault(d => d.DiscountId == discountId);
+
+            return new DiscountProgramVM
+            {
+                DiscountId = discount.DiscountId,
+                Title = discount.Title,
+                Content = discount.Content,
+                Start = discount.Start,
+                End = discount.End,
+                CouponCode = discount.CouponCode,
+                DiscountPercent = discount.DiscountPercent,
+                BannerImg = discount.BannerImg
+            };
+        }
+
+        public bool DeleteDiscount(int discountId)
+        {
+            var discount = _context.DiscountPrograms.SingleOrDefault(d => d.DiscountId == discountId);
+
+            if(discount != null)
+            {
+                _context.Remove(discount);
                 _context.SaveChanges();
 
                 return true;

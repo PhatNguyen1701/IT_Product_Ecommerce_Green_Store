@@ -45,20 +45,20 @@ namespace ITProductECommerce.Data
                 context.Roles.Add(role);
             }
 
-            if(!context.Customers.Any(c => c.CustomerId == "sysadmin"))
+            if(!context.Staff.Any(c => c.StaffId == "sysadmin"))
             {
                 string adminId = "sysadmin";
                 string adminPW = "password";
                 string randomKey = Util.GenerateRandomKey();
 
-                var admin = new Customer
+                var admin = new Staff
                 {
-                    CustomerId = adminId,
+                    StaffId = adminId,
                     RandomKey = randomKey,
                     Password = adminPW.ToMd5Hash(randomKey),
                     IsActive = true,
-                    Role = 1,
-                    CustomerName = "Admin",
+                    RoleId = 1,
+                    StaffName = "Admin",
                     Gender = true,
                     DoB = DateTime.Now,
                     Address = "N/A",
@@ -66,7 +66,7 @@ namespace ITProductECommerce.Data
                     Email = "sysadmin@test.com",
                     AvatarURL = "admin-avatar-img",
                 };
-                context.Customers.Add(admin);
+                context.Staff.Add(admin);
             }
 
             context.SaveChanges();

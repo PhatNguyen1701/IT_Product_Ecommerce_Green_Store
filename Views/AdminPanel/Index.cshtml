@@ -14,7 +14,10 @@
 </div>
 <!-- Single Page Header End -->
 
-<h1 style="padding-left: 31rem; padding-top: 3rem;">Welcome Admin</h1>
+<div class="h-50 d-flex justify-content-center align-items-center pt-4">
+    <h1>Welcome Admin</h1>
+</div>
+
 
 <div class="container-fluid py-5">
     <div class="container py-5">
@@ -32,6 +35,15 @@
                         <div class="form-item w-100">
                             <a asp-controller="AdminPanel" asp-action="OrderPanel">Order Management</a>
                         </div>
+                        <div class="form-item w-100">
+                            <a asp-controller="AdminPanel" asp-action="DiscountPanel">Discount Management</a>
+                        </div>
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div class="form-item w-100">
+                                <a asp-controller="AdminPanel" asp-action="StaffPanel">Staff Management</a>
+                            </div>
+                        }
                     </div>
                 </div>
             </div>

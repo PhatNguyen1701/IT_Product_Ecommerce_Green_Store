@@ -67,6 +67,7 @@
     <Folder Include="wwwroot\img\Discounts\" />
     <Folder Include="wwwroot\img\Products\" />
     <Folder Include="wwwroot\img\Providers\" />
+    <Folder Include="wwwroot\img\Staff\" />
   </ItemGroup>
 
 </Project>

@@ -50,7 +50,7 @@ namespace ITProductECommerce.Migrations
 
                     b.HasIndex("StaffId");
 
-                    b.ToTable("Assignments");
+                    b.ToTable("Assignments", (string)null);
                 });
 
             modelBuilder.Entity("ITProductECommerce.Data.Category", b =>
@@ -76,7 +76,7 @@ namespace ITProductECommerce.Migrations
 
                     b.HasKey("CategoryId");
 
-                    b.ToTable("Categories");
+                    b.ToTable("Categories", (string)null);
                 });
 
             modelBuilder.Entity("ITProductECommerce.Data.Customer", b =>
@@ -93,6 +93,9 @@ namespace ITProductECommerce.Migrations
                     b.Property<string>("CustomerName")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<int?>("DiscountId")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("DoB")
                         .IsRequired()
@@ -118,29 +121,16 @@ namespace ITProductECommerce.Migrations
                     b.Property<string>("RandomKey")
                         .HasColumnType("varchar(50)");
 
-                    b.Property<int>("Role")
+                    b.Property<int>("RoleId")
                         .HasColumnType("int");
 
                     b.HasKey("CustomerId");
 
-                    b.ToTable("Customers");
+                    b.HasIndex("DiscountId");
 
-                    b.HasData(
-                        new
-                        {
-                            CustomerId = "sysadmin",
-                            Address = "N/A",
-                            AvatarURL = "",
-                            CustomerName = "Admin",
-                            DoB = new DateTime(2024, 7, 8, 21, 29, 45, 712, DateTimeKind.Local).AddTicks(7459),
-                            Email = "sysadmin@test.com",
-                            Gender = true,
-                            IsActive = true,
-                            Password = "c658c4c9eda94a9cd47a6d26ccfcd91b",
-                            PhoneNumber = "1234567890",
-                            RandomKey = "Vd$Va",
-                            Role = 1
-                        });
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("ITProductECommerce.Data.Department", b =>
@@ -157,15 +147,51 @@ namespace ITProductECommerce.Migrations
 
                     b.HasKey("DepartmentId");
 
-                    b.ToTable("Departments");
+                    b.ToTable("Departments", (string)null);
+                });
 
-                    b.HasData(
-                        new
-                        {
-                            DepartmentId = "HOD",
-                            DepartmentName = "Head of department",
-                            Description = "Has ultimate authority and manages all other departments and employees"
-                        });
+            modelBuilder.Entity("ITProductECommerce.Data.DiscountProgram", b =>
+                {
+                    b.Property<int>("DiscountId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DiscountId"));
+
+                    b.Property<string>("BannerImg")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CouponCode")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<int>("DiscountPercent")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("End")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
+                    b.Property<DateTime>("Start")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("DiscountId");
+
+                    b.HasIndex("CouponCode")
+                        .IsUnique();
+
+                    b.ToTable("DiscountPrograms", (string)null);
                 });
 
             modelBuilder.Entity("ITProductECommerce.Data.MainComment", b =>
@@ -199,7 +225,7 @@ namespace ITProductECommerce.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("MainComments");
+                    b.ToTable("MainComments", (string)null);
                 });
 
             modelBuilder.Entity("ITProductECommerce.Data.Order", b =>
@@ -263,7 +289,7 @@ namespace ITProductECommerce.Migrations
 
                     b.HasIndex("StatusId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("ITProductECommerce.Data.OrderDetail", b =>
@@ -295,7 +321,7 @@ namespace ITProductECommerce.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderDetails");
+                    b.ToTable("OrderDetails", (string)null);
                 });
 
             modelBuilder.Entity("ITProductECommerce.Data.Product", b =>
@@ -354,7 +380,7 @@ namespace ITProductECommerce.Migrations
 
                     b.HasIndex("ProviderId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Products", (string)null);
                 });
 
             modelBuilder.Entity("ITProductECommerce.Data.Provider", b =>
@@ -389,7 +415,7 @@ namespace ITProductECommerce.Migrations
 
                     b.HasKey("ProviderId");
 
-                    b.ToTable("Providers");
+                    b.ToTable("Providers", (string)null);
                 });
 
             modelBuilder.Entity("ITProductECommerce.Data.Role", b =>
@@ -429,20 +455,7 @@ namespace ITProductECommerce.Migrations
 
                     b.HasIndex("WebId");
 
-                    b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            RoleId = 1,
-                            DepartmentId = "HOD",
-                            IsAdd = false,
-                            IsDelete = false,
-                            IsEdit = false,
-                            IsViewed = false,
-                            RoleName = "Admin",
-                            WebId = 1
-                        });
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("ITProductECommerce.Data.Staff", b =>
@@ -450,13 +463,39 @@ namespace ITProductECommerce.Migrations
                     b.Property<string>("StaffId")
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(60)");
+
+                    b.Property<string>("AvatarURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(50)");
+
+                    b.Property<DateTime?>("DoB")
+                        .IsRequired()
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Email")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<bool>("Gender")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
+
+                    b.Property<string>("PhoneNumber")
+                        .HasColumnType("nvarchar(24)");
+
+                    b.Property<string>("RandomKey")
+                        .HasColumnType("varchar(50)");
+
+                    b.Property<int>("RoleId")
+                        .HasColumnType("int");
 
                     b.Property<string>("StaffName")
                         .IsRequired()
@@ -464,7 +503,9 @@ namespace ITProductECommerce.Migrations
 
                     b.HasKey("StaffId");
 
-                    b.ToTable("Staff");
+                    b.HasIndex("RoleId");
+
+                    b.ToTable("Staff", (string)null);
                 });
 
             modelBuilder.Entity("ITProductECommerce.Data.Status", b =>
@@ -484,7 +525,7 @@ namespace ITProductECommerce.Migrations
 
                     b.HasKey("StatusId");
 
-                    b.ToTable("Statuses");
+                    b.ToTable("Statuses", (string)null);
                 });
 
             modelBuilder.Entity("ITProductECommerce.Data.SubComment", b =>
@@ -515,7 +556,7 @@ namespace ITProductECommerce.Migrations
 
                     b.HasIndex("MainCommentId");
 
-                    b.ToTable("SubComments");
+                    b.ToTable("SubComments", (string)null);
                 });
 
             modelBuilder.Entity("ITProductECommerce.Data.Web", b =>
@@ -536,15 +577,7 @@ namespace ITProductECommerce.Migrations
 
                     b.HasKey("WebId");
 
-                    b.ToTable("Webs");
-
-                    b.HasData(
-                        new
-                        {
-                            WebId = 1,
-                            URL = "N/A",
-                            WebName = "Home Page"
-                        });
+                    b.ToTable("Webs", (string)null);
                 });
 
             modelBuilder.Entity("ITProductECommerce.Data.Assignment", b =>
@@ -564,6 +597,24 @@ namespace ITProductECommerce.Migrations
                     b.Navigation("Department");
 
                     b.Navigation("Staff");
+                });
+
+            modelBuilder.Entity("ITProductECommerce.Data.Customer", b =>
+                {
+                    b.HasOne("ITProductECommerce.Data.DiscountProgram", "DiscountProgram")
+                        .WithMany("Customers")
+                        .HasForeignKey("DiscountId")
+                        .OnDelete(DeleteBehavior.SetNull);
+
+                    b.HasOne("ITProductECommerce.Data.Role", "Role")
+                        .WithMany("Customers")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("DiscountProgram");
+
+                    b.Navigation("Role");
                 });
 
             modelBuilder.Entity("ITProductECommerce.Data.MainComment", b =>
@@ -596,7 +647,7 @@ namespace ITProductECommerce.Migrations
                     b.HasOne("ITProductECommerce.Data.Staff", "Staff")
                         .WithMany("Orders")
                         .HasForeignKey("StaffId")
-                        .OnDelete(DeleteBehavior.Restrict);
+                        .OnDelete(DeleteBehavior.SetNull);
 
                     b.HasOne("ITProductECommerce.Data.Status", "Status")
                         .WithMany("Orders")
@@ -668,6 +719,17 @@ namespace ITProductECommerce.Migrations
                     b.Navigation("Web");
                 });
 
+            modelBuilder.Entity("ITProductECommerce.Data.Staff", b =>
+                {
+                    b.HasOne("ITProductECommerce.Data.Role", "Role")
+                        .WithMany("Staffs")
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Role");
+                });
+
             modelBuilder.Entity("ITProductECommerce.Data.SubComment", b =>
                 {
                     b.HasOne("ITProductECommerce.Data.Customer", "Customer")
@@ -708,6 +770,11 @@ namespace ITProductECommerce.Migrations
                     b.Navigation("Roles");
                 });
 
+            modelBuilder.Entity("ITProductECommerce.Data.DiscountProgram", b =>
+                {
+                    b.Navigation("Customers");
+                });
+
             modelBuilder.Entity("ITProductECommerce.Data.MainComment", b =>
                 {
                     b.Navigation("SubComments");
@@ -728,6 +795,13 @@ namespace ITProductECommerce.Migrations
             modelBuilder.Entity("ITProductECommerce.Data.Provider", b =>
                 {
                     b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("ITProductECommerce.Data.Role", b =>
+                {
+                    b.Navigation("Customers");
+
+                    b.Navigation("Staffs");
                 });
 
             modelBuilder.Entity("ITProductECommerce.Data.Staff", b =>

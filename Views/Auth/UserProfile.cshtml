@@ -17,7 +17,7 @@
 <div class="container-fluid py-5">
     <div class="container py-5">
         <h1 class="mb-4">@Model.CustomerName Profile</h1>
-        <div class="row-g5">
+        <div class="row g-5">
             <div class="col-md-12 col-lg-6 col-xl-7">
                 <div class="row">
                     <div class="form-item" style="display: flex;">
@@ -55,12 +55,18 @@
                         <p style="color: green; font-weight: bold; margin-left: 14.9rem; margin-top: 1rem;">@Model.Email</p>
                     </div>
                 </div>
-                <div class="row g-4 text-center align-items-center justify-content-center pt-4">
-                    <a asp-controller="Auth" asp-action="UpdateUserProfile" asp-route-customerId="@Model.CustomerId" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Update Profile</a>
+            </div>
+            <div class="col-md-12 col-lg-6 col-xl-5">
+                <label class="form-label my-3">Profile Picture</label>
+                <div id="profile-container">
+                    <img id="profileImage" src="~/img/Customers/@Model.AvatarURL" />
                 </div>
-                <div class="row g-4 text-center align-items-center justify-content-center pt-4">
-                    <a asp-controller="Auth" asp-action="Logout" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Logout</a>
-                </div>
+            </div>
+            <div class="row g-4 text-center align-items-center justify-content-center pt-4">
+                <a asp-controller="Auth" asp-action="UpdateUserProfile" asp-route-customerId="@Model.CustomerId" class="btn border-secondary py-3 px-4 text-uppercase w-50 text-primary">Update Profile</a>
+            </div>
+            <div class="row g-4 text-center align-items-center justify-content-center">
+                <a asp-controller="Auth" asp-action="Logout" class="btn border-secondary py-3 px-4 text-uppercase w-50 text-primary">Logout</a>
             </div>
         </div>
     </div>

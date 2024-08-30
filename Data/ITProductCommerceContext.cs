@@ -26,6 +26,7 @@ namespace ITProductECommerce.Data
         public DbSet<Web> Webs { get; set; }
         public DbSet<MainComment> MainComments { get; set; }
         public DbSet<SubComment> SubComments { get; set; }
+        public DbSet<DiscountProgram> DiscountPrograms { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,6 +44,7 @@ namespace ITProductECommerce.Data
             modelBuilder.ApplyConfiguration(new WebConfiguration());
             modelBuilder.ApplyConfiguration(new MainCommentConfiguration());
             modelBuilder.ApplyConfiguration(new SubCommentConfiguration());
+            modelBuilder.ApplyConfiguration(new DiscountProgramConfiguration());
 
             #region Seeding using Migration
             //modelBuilder.Entity<Web>().HasData(new Web

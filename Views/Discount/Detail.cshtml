@@ -1,0 +1,64 @@
+﻿@model ITProductECommerce.ViewModels.DiscountProgramVM
+@{
+    ViewData["Title"] = "Detail";
+}
+
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Discount Detail</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Discount" asp-action="Index">Discount Program</a></li>
+        <li class="breadcrumb-item active text-white">Discount detail</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
+<!-- Single Product Start -->
+<div class="container-fluid py-5 mt-5">
+    <div class="container py-5">
+        <div class="row g-4 mb-5">
+            <div class="col-lg-8 col-xl-9">
+                <div class="row g-4">
+                    <div class="discount-container">
+                        <div class="discount shadow-none">
+                            @if (!String.IsNullOrEmpty(Model.BannerImg))
+                            {
+                                <img src="~/img/Discounts/@Model.BannerImg" width="500">
+                                <span class="discount-title">@Model.Title</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="discount-content">
+                        @Model.Start - @Model.End
+                    </div>
+                    <div class="discount-content">
+                        @Model.Content
+                    </div>
+                    <div class="discount-content">
+                        @Model.CouponCode - @Model.DiscountPercent
+                    </div>
+                </div>
+                <div class="col-lg-4 col-xl-3">
+                    <div class="row g-4 fruite">
+                        <div class="col-lg-12">
+                            @await Component.InvokeAsync("CategoryMenu")
+                        </div>
+                        @await Component.InvokeAsync("FeatureProduct")
+                        <div class="col-lg-12">
+                            <div class="position-relative">
+                                <img src="~/static/banner-fruits.jpg" class="img-fluid w-100 rounded" alt="">
+                                <div class="position-absolute" style="top: 50%; right: 10px; transform: translateY(-50%);">
+                                    <h3 class="text-secondary fw-bold">Fresh <br> Fruits <br> Banner</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <h1 class="fw-bold mb-0">Related products</h1>
+            <div class="vesitable">
+                @await Component.InvokeAsync("ListProduct")
+            </div>
+        </div>
+    </div>
+    <!-- Single Product End -->

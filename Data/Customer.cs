@@ -12,9 +12,12 @@
         public string Email { get; set; } = "";
         public string? AvatarURL { get; set; }
         public bool IsActive { get; set; }
-        public int Role { get; set; }
+        public int RoleId { get; set; }
         public string? RandomKey { get; set; }
+        public int? DiscountId { get; set; }
 
+        public Role Role { get; set; }
+        public DiscountProgram DiscountProgram { get; set; }
         public ICollection<Order> Orders { get; set; }
         public ICollection<MainComment> MainComments { get; set; }
         public ICollection<SubComment> SubComments { get; set; }

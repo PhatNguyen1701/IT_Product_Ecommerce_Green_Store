@@ -13,5 +13,7 @@
 
         public Department Department { get; set; }
         public Web Web { get; set; }
+        public ICollection<Staff> Staffs { get; set; }
+        public ICollection<Customer> Customers { get; set; }
     }
 }

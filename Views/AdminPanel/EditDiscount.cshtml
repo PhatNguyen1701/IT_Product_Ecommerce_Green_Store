@@ -1,0 +1,123 @@
+﻿@model ITProductECommerce.ViewModels.DiscountProgramVM
+
+@{
+    ViewData["Title"] = "Edit Discount";
+}
+
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Edit Discount</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-controller="AdminPanel" asp-action="Index">Admin Panel</a></li>
+        <li class="breadcrumb-item"><a asp-controller="AdminPanel" asp-action="DiscountPanel">Discount Panel</a></li>
+        <li class="breadcrumb-item active text-white">Edit Discount</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
+
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <h1 class="mb-4">Discount's infomation</h1>
+        <form asp-controller="AdminPanel" asp-action="EditDiscount" method="post" enctype="multipart/form-data">
+            <div class="row g-5">
+                <div class="col-md-12 col-lg-6 col-xl-7">
+                    <div class="row">
+                        <input asp-for="DiscountId" type="hidden" />
+                        <div class="col-md-12 col-lg-6">
+                            <div class="form-item w-100">
+                                <label class="form-label my-3">Title</label><sup>*</sup>
+                                <input asp-for="@Model.Title" type="text" class="form-control">
+                                <span asp-validation-for="@Model.Title" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-6">
+                            <div class="form-item w-100">
+                                <label class="form-label my-3">Content</label><sup>*</sup>
+                                <input asp-for="@Model.Content" type="text" class="form-control">
+                                <span asp-validation-for="@Model.Content" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-6">
+                            <div class="form-item w-100">
+                                <label class="form-label my-3">Start</label><sup>*</sup>
+                                <input asp-for="@Model.Start" class="form-control">
+                                <span asp-validation-for="@Model.Start" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-6">
+                            <div class="form-item w-100">
+                                <label class="form-label my-3">End</label><sup>*</sup>
+                                <input asp-for="@Model.End" class="form-control">
+                                <span asp-validation-for="@Model.End" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-6">
+                            <div class="form-item w-100">
+                                <label class="form-label my-3">Coupon Code</label><sup>*</sup>
+                                <input asp-for="@Model.CouponCode" type="text" class="form-control">
+                                <span asp-validation-for="@Model.CouponCode" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-6">
+                            <div class="form-item w-100">
+                                <label class="form-label my-3">Discount percent</label><sup>*</sup>
+                                <input asp-for="@Model.DiscountPercent" class="form-control">
+                                <span asp-validation-for="@Model.DiscountPercent" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="py-2"></div>
+                        <div class="form-item">
+                            <div class="form-item w-100">
+                                <input asp-for="@Model.IsActive" type="checkbox" class="form-check-input" id="IsActive" name="IsActive" checked>
+                                <label class="form-check-label" for="IsActive">Is Active</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-6 col-xl-5">
+                    <label class="form-label my-3">Banner Picture</label>
+                    <div id="edit-container">
+                        <img id="profileImage" src="~/static/edit-image-default-img.png" />
+                    </div>
+                    <input class="pt-3" id="imageUpload" type="file" name="Image" />
+                </div>
+                <div class="row g-4 text-center align-items-center justify-content-center pt-4">
+                    <button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-50 text-primary">Summit</button>
+                    @if (ViewBag.Message != null)
+                    {
+                        <script type="text/javascript">
+                        @*$(document).ready(function(){alert('@ViewBag.Message');});*@
+                            window.onload = function () {
+                                alert("@ViewBag.Message");
+                            };
+                        </script>
+                    }
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#Gender").change(function () {
+                if ($(this).prop("checked")) {
+                    $(this).val(true);
+                }
+                else {
+                    $(this).val(false);
+                }
+            });
+        });
+
+
+        imageUpload.onchange = evt => {
+            const [file] = imageUpload.files
+            if (file) {
+                profileImage.src = URL.createObjectURL(file)
+            }
+        }
+    </script>
+}

@@ -20,7 +20,7 @@
     <div class="container py-5">
         <h1 class="mb-4">Product's infomation</h1>
         <form asp-controller="AdminPanel" asp-action="EditProduct" method="post" enctype="multipart/form-data">
-            <div class="row-g5">
+            <div class="row g-5">
                 <div class="col-md-12 col-lg-6 col-xl-7">
                     <div class="row">
                         <input asp-for="ProductId" type="hidden" />
@@ -41,7 +41,12 @@
                         <div class="col-md-12 col-lg-6">
                             <div class="form-item w-100">
                                 <label class="form-label my-3">Category</label><sup>*</sup>
-                                <input asp-for="@Model.CategoryId" type="text" class="form-control">
+                                <select asp-for="@Model.CategoryId" class="form-control">
+                                    @foreach (var item in Model.Categories)
+                                    {
+                                        <option value="@item.CategoryId">@item.CategoryName</option>
+                                    }
+                                </select>
                                 <span asp-validation-for="@Model.CategoryId" class="text-danger"></span>
                             </div>
                         </div>
@@ -83,33 +88,55 @@
                         <div class="col-md-12 col-lg-6">
                             <div class="form-item w-100">
                                 <label class="form-label my-3">Provider</label><sup>*</sup>
-                                <input asp-for="@Model.ProviderId" type="text" class="form-control">
+                                <select asp-for="@Model.ProviderId" class="form-control">
+                                    @foreach (var item in Model.Providers)
+                                    {
+                                        <option value="@item.ProviderId">@item.CompanyName</option>
+                                    }
+                                </select>
                                 <span asp-validation-for="@Model.ProviderId" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="form-item">
-                            <label class="form-label my-3" for="Image">Image</label><sup>*</sup>
-                            <input type="file" name="Image" class="form-control" />
-                            <input type="file" name="CurrentImage" style="display:none;"/>
-                        </div>
                     </div>
-                    <div class="row g-4 text-center align-items-center justify-content-center pt-4">
-                        <button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Summit</button>
+                </div>
+                <div class="col-md-12 col-lg-6 col-xl-5">
+                    <label class="form-label my-3">Product Picture</label>
+                    <div id="edit-container">
+                        <img id="profileImage" src="~/static/edit-image-default-img.png" />
                     </div>
+                    <input class="pt-3" id="imageUpload" type="file" name="Image" />
+                    <input type="file" name="CurrentImage" style="display:none;" />
+                </div>
+                <div class="row g-4 text-center align-items-center justify-content-center pt-4">
+                    <button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-50 text-primary">Summit</button>
+                    @if (ViewBag.Message != null)
+                    {
+                        <script type="text/javascript">
+                            @*$(document).ready(function(){alert('@ViewBag.Message');});*@
+                            window.onload = function () {
+                                alert("@ViewBag.Message");
+                            };
+                        </script>
+                    }
                 </div>
             </div>
         </form>
     </div>
 </div>
 
-@if (ViewBag.Message != null)
-{
-    <script type="text/javascript">
-        @*$(document).ready(function(){alert('@ViewBag.Message');});*@
-        window.onload = function () {
-                alert("@ViewBag.Message");
-            };
+@section Scripts{
+    <script>
+        imageUpload.onchange = evt => {
+            const [file] = imageUpload.files
+            if (file) {
+                profileImage.src = URL.createObjectURL(file)
+            }
+        }
     </script>
 }
+
+
+
+
 
 

@@ -44,11 +44,21 @@ namespace ITProductECommerce.Configurations
             builder.Property(c => c.IsActive)
                 .IsRequired();
 
-            builder.Property(c => c.Role)
+            builder.Property(c => c.RoleId)
                 .IsRequired();
 
             builder.Property(c => c.RandomKey)
                 .HasColumnType("varchar(50)");
+
+            builder.HasOne(r => r.Role)
+                .WithMany(c => c.Customers)
+                .HasForeignKey(c => c.RoleId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder.HasOne(d => d.DiscountProgram)
+                .WithMany(c => c.Customers)
+                .HasForeignKey(c => c.DiscountId)
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }

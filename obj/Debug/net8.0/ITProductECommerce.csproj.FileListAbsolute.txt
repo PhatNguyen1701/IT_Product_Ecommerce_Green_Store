@@ -251,3 +251,4 @@ D:\MyProjects\ITProductECommerce\ITProductECommerce\bin\Debug\net8.0\runtimes\wi
 D:\MyProjects\ITProductECommerce\ITProductECommerce\bin\Debug\net8.0\AutoMapper.dll
 D:\MyProjects\ITProductECommerce\ITProductECommerce\bin\Debug\net8.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
 D:\MyProjects\ITProductECommerce\ITProductECommerce\bin\Debug\net8.0\PhotoSauce.MagicScaler.dll
+D:\MyProjects\ITProductECommerce\ITProductECommerce\obj\Debug\net8.0\ITProductECommerce.sourcelink.json

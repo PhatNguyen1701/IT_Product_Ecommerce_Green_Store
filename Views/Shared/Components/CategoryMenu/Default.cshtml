@@ -8,16 +8,22 @@
             {
                 <li>
                     <div class="d-flex justify-content-between fruite-name">
-                        @if (Context.Request.Path == "/Products" || Context.Request.Path.ToString().Substring(0, 16) == "/Products/Detail"
-                            || Context.Request.Path.ToString().Substring(0, 16) == "/Products/Search")
+                        @if (Context.Request.Path == "/Products" || Context.Request.Path.ToString().StartsWith("/Products/Detail") == true
+                           || Context.Request.Path.ToString().StartsWith("/Products/Search") == true)
                         {
                             <a asp-controller="Products" asp-action="Index" asp-route-categoryId="@item.CategoryId">
                                 <i class="fas fa-apple-alt me-2"></i>@item.CategoryName
                             </a>
                         }
-                        else if(Context.Request.Path == "/AdminPanel/ProductPanel")
+                        else if (Context.Request.Path == "/AdminPanel/ProductPanel")
                         {
                             <a asp-controller="AdminPanel" asp-action="ProductPanel" asp-route-categoryId="@item.CategoryId">
+                                <i class="fas fa-apple-alt me-2"></i>@item.CategoryName
+                            </a>
+                        }
+                        else
+                        {
+                            <a asp-controller="Products" asp-action="Index" asp-route-categoryId="@item.CategoryId">
                                 <i class="fas fa-apple-alt me-2"></i>@item.CategoryName
                             </a>
                         }

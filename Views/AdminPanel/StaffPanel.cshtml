@@ -1,0 +1,87 @@
+﻿@model ITProductECommerce.ViewModels.StaffViewModel
+
+@{
+    ViewData["Title"] = "StaffPanel";
+}
+
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Order Panel</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-controller="AdminPanel" asp-action="Index">Admin Panel</a></li>
+        <li class="breadcrumb-item active text-white">Staff Panel</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
+<!-- Cart Page Start -->
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <div class="col-xl-3 pb-3">
+            <div class="input-group w-100 mx-auto d-flex">
+                @await Html.PartialAsync("_StaffSearch")
+            </div>
+        </div>
+        <a asp-controller="AdminPanel" asp-action="EditStaff" class="btn border-secondary py-3 px-4 text-uppercase w-25 text-primary">Add new staff</a>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Staff ID</th>
+                        <th scope="col">Staff Name</th>
+                        <th scope="col">Email</th>
+                        <th scope="col">Gender</th>
+                        <th scope="col">Date of birth</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Phone number</th>
+                        <th scope="col">Options</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Staffs)
+                    {
+                        if (item.StaffId == "sysadmin")
+                        {
+                            continue;
+                        }
+                        <tr>
+                            <td>
+                                <p class="mb-0 mt-4">
+                                    @item.StaffId
+                                </p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.StaffName</p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.Email</p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.Gender</p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.DoB</p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.Address</p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.PhoneNumber</p>
+                            </td>
+                            <td>
+                                <a asp-controller="AdminPanel" asp-action="EditStaff" asp-route-staffId="@item.StaffId" class="btn btn-md rounded-circle bg-light border mt-4">
+                                    <i class="bi bi-card-list"></i>
+                                </a>
+                                <a asp-controller="AdminPanel" asp-action="RemoveStaff" asp-route-staffId="@item.StaffId" class="btn btn-md rounded-circle bg-light border mt-4">
+                                    <i class="fa fa-times text-danger"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            @await Html.PartialAsync("_StaffIndexPagination")
+        </div>
+    </div>
+</div>
+<!-- Cart Page End -->

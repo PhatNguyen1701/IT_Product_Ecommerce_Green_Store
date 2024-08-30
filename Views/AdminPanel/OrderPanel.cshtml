@@ -32,6 +32,7 @@
                         <th scope="col">Order Date</th>
                         <th scope="col">Address</th>
                         <th scope="col">Phone Number</th>
+                        <th scope="col">Staff in charge</th>
                         <th scope="col">Status</th>
                     </tr>
                 </thead>
@@ -57,6 +58,16 @@
                             </td>
                             <td>
                                 <p class="mb-0 mt-4">@item.PhoneNumber</p>
+                            </td>
+                            <td>
+                                @if (!String.IsNullOrEmpty(item.StaffId))
+                                {
+                                    <p class="mb-0 mt-4">@item.StaffId</p>
+                                }
+                                else
+                                {
+                                    <p class="mb-0 mt-4">Deleted</p>
+                                }
                             </td>
                             <td>
                                 @if (item.StatusId == 1)

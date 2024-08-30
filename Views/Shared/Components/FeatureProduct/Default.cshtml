@@ -1,0 +1,32 @@
+﻿@model ITProductECommerce.ViewModels.ProductVM
+
+@foreach (var item in Model.Products)
+{
+    <div class="d-flex align-items-center justify-content-start">
+        <div class="rounded" style="width: 100px; height: 100px;">
+            <a asp-controller="Products" asp-action="Detail" asp-route-id="@item.ProductId">
+                <img src="~/img/Products/@item.ImageURL" class="img-fluid rounded" alt="Image">
+            </a>
+        </div>
+        <div>
+            <a asp-controller="Products" asp-action="Detail" asp-route-id="@item.ProductId">
+                <h6 class="mb-2">@item.ProductName</h6>
+            </a>
+            <div class="d-flex mb-2">
+                @for (int i = 1; i <= item.AvgRating; i++)
+                {
+                    <i class="fa fa-star text-secondary"></i>
+                }
+                @for (int j = item.AvgRating; j < 5; j++)
+                {
+                    <i class="fa fa-star"></i>
+                }
+            </div>
+            <div class="d-flex mb-2">
+                <h5 class="fw-bold me-2">@item.UnitPrice $</h5>
+                <h5 class="text-danger">BUY</h5>
+            </div>
+        </div>
+    </div>
+
+}

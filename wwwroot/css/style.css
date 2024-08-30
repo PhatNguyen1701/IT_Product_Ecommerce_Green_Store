@@ -513,32 +513,32 @@
     padding-bottom: 2rem;
 }
 
-.sub_comment input {
-    border: 1px solid #81c408;
-    background-color: transparent;
-    color: black;
-    font-size: 15px;
-}
-
-    .sub_comment input::placeholder {
-        color: #b0b0b0;
-        text-align: left;
-    }
-
-.sub_comment button[type="submit"] {
-    background-color: #81c408;
-    color: #ffffff;
-    font-weight: 700;
-    text-transform: uppercase;
-    border: none;
-}
-
-    .sub_comment button[type="submit"]:focus,
-    .sub_comment button[type="submit"]:hover {
+    .sub_comment input {
+        border: 1px solid #81c408;
         background-color: transparent;
-        border: none;
         color: black;
+        font-size: 15px;
     }
+
+        .sub_comment input::placeholder {
+            color: #b0b0b0;
+            text-align: left;
+        }
+
+    .sub_comment button[type="submit"] {
+        background-color: #81c408;
+        color: #ffffff;
+        font-weight: 700;
+        text-transform: uppercase;
+        border: none;
+    }
+
+        .sub_comment button[type="submit"]:focus,
+        .sub_comment button[type="submit"]:hover {
+            background-color: transparent;
+            border: none;
+            color: black;
+        }
 
 /*** SubComment End ***/
 
@@ -552,7 +552,7 @@
     transition: all 0.2s ease;
 }
 
-.star-widget input{
+.star-widget input {
     display: none;
 }
 
@@ -571,3 +571,76 @@ input#rate-5:checked ~ label {
 }
 
 /*** Rating System End ***/
+
+/*** User Image Container Start ***/
+
+#profile-container {
+    width: 300px;
+    height: 300px;
+    overflow: hidden;
+    -webkit-border-radius: 50%;
+    -moz-border-radius: 50%;
+    -ms-border-radius: 50%;
+    -o-border-radius: 50%;
+    border-radius: 50%;
+}
+
+    #profile-container img {
+        width: 300px;
+        height: 300px;
+    }
+
+/*** User Image Container End ***/
+
+/*** Edit Image Container Start ***/
+
+#edit-container {
+    width: 500px;
+    height: 350px;
+    overflow: hidden;
+    border-radius: 25px;
+}
+
+    #edit-container img {
+        width: 500px;
+        height: 350px;
+    }
+
+/*** Edit Image Container End ***/
+
+/*** Discount Start ***/
+
+.discount {
+    margin: 15px;
+    position: relative;
+    display: flex;
+    height: 400px;
+    box-shadow: 0 0 5px 0 #36c4db;
+}
+
+    .discount img {
+        width: 100%;
+        object-fit: cover;
+    }
+
+.discount-title {
+    position: absolute;
+    left: 50%;
+    color:#fd3900;
+    font-size: 50px;
+    font-weight: bold;
+    transform: translateX(-50%);
+    top: 35%;
+    text-shadow: 5px 0 10px #ffffff;
+    text-align: center;
+}
+
+.discount-content {
+    margin: -5px 5px 0;
+    padding: 20px 5px;
+    background-color: white;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+/*** Discount Start ***/

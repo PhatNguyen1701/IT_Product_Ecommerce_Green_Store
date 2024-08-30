@@ -49,24 +49,36 @@
       "PackagePath": "staticwebassets\\img\\Categories\\img_09-07-24-21-37-28.jpg"
     },
     {
-      "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\img\\Customers\\img_10-07-24-21-07-49.jpg",
-      "PackagePath": "staticwebassets\\img\\Customers\\img_10-07-24-21-07-49.jpg"
+      "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\img\\Customers\\img_28-08-24-12-32-47.jpg",
+      "PackagePath": "staticwebassets\\img\\Customers\\img_28-08-24-12-32-47.jpg"
     },
     {
-      "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\img\\Customers\\img_10-07-24-21-10-17.jpg",
-      "PackagePath": "staticwebassets\\img\\Customers\\img_10-07-24-21-10-17.jpg"
+      "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\img\\Customers\\img_28-08-24-12-33-40.jpg",
+      "PackagePath": "staticwebassets\\img\\Customers\\img_28-08-24-12-33-40.jpg"
     },
     {
-      "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\img\\Customers\\img_10-07-24-21-13-31.jpg",
-      "PackagePath": "staticwebassets\\img\\Customers\\img_10-07-24-21-13-31.jpg"
+      "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\img\\Customers\\img_28-08-24-12-34-46.jpg",
+      "PackagePath": "staticwebassets\\img\\Customers\\img_28-08-24-12-34-46.jpg"
     },
     {
-      "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\img\\Customers\\img_10-07-24-21-14-23.jpg",
-      "PackagePath": "staticwebassets\\img\\Customers\\img_10-07-24-21-14-23.jpg"
+      "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\img\\Customers\\img_28-08-24-12-35-48.jpg",
+      "PackagePath": "staticwebassets\\img\\Customers\\img_28-08-24-12-35-48.jpg"
     },
     {
-      "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\img\\Customers\\img_10-07-24-21-18-09.jpg",
-      "PackagePath": "staticwebassets\\img\\Customers\\img_10-07-24-21-18-09.jpg"
+      "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\img\\Customers\\img_28-08-24-12-36-38.jpg",
+      "PackagePath": "staticwebassets\\img\\Customers\\img_28-08-24-12-36-38.jpg"
+    },
+    {
+      "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\img\\Discounts\\img_18-08-24-12-21-22.jpg",
+      "PackagePath": "staticwebassets\\img\\Discounts\\img_18-08-24-12-21-22.jpg"
+    },
+    {
+      "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\img\\Discounts\\img_18-08-24-12-27-11.jpg",
+      "PackagePath": "staticwebassets\\img\\Discounts\\img_18-08-24-12-27-11.jpg"
+    },
+    {
+      "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\img\\Products\\img_06-08-24-21-59-15.jpg",
+      "PackagePath": "staticwebassets\\img\\Products\\img_06-08-24-21-59-15.jpg"
     },
     {
       "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\img\\Products\\img_09-07-24-21-32-04.jpg",
@@ -151,6 +163,14 @@
     {
       "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\img\\Products\\img_09-07-24-22-05-21.jpg",
       "PackagePath": "staticwebassets\\img\\Products\\img_09-07-24-22-05-21.jpg"
+    },
+    {
+      "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\img\\Staff\\img_28-08-24-21-52-16.jpg",
+      "PackagePath": "staticwebassets\\img\\Staff\\img_28-08-24-21-52-16.jpg"
+    },
+    {
+      "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\img\\Staff\\img_28-08-24-21-52-49.jpg",
+      "PackagePath": "staticwebassets\\img\\Staff\\img_28-08-24-21-52-49.jpg"
     },
     {
       "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\js\\main.js",
@@ -819,6 +839,14 @@
     {
       "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\static\\category-banner-img.jpg",
       "PackagePath": "staticwebassets\\static\\category-banner-img.jpg"
+    },
+    {
+      "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\static\\default-user-avatar.jpg",
+      "PackagePath": "staticwebassets\\static\\default-user-avatar.jpg"
+    },
+    {
+      "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\static\\edit-image-default-img.png",
+      "PackagePath": "staticwebassets\\static\\edit-image-default-img.png"
     },
     {
       "Id": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\wwwroot\\static\\featur-1.jpg",

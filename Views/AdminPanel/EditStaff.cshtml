@@ -1,0 +1,134 @@
+﻿@model ITProductECommerce.ViewModels.StaffViewModel
+
+@{
+    ViewData["Title"] = "Edit Staff";
+}
+
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Edit Staff Info</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-controller="AdminPanel" asp-action="Index">Admin Panel</a></li>
+        <li class="breadcrumb-item"><a asp-controller="AdminPanel" asp-action="StaffPanel">Staff Panel</a></li>
+        <li class="breadcrumb-item active text-white">Edit Staff</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
+
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <h1 class="mb-4">Staff's infomation</h1>
+        <form asp-controller="AdminPanel" asp-action="EditStaff" method="post" enctype="multipart/form-data">
+            <div class="row g-5">
+                <div class="col-md-12 col-lg-6 col-xl-7">
+                    <div class="row">
+                        <div class="col-md-12 col-lg-6">
+                            <div class="form-item w-100">
+                                <label class="form-label my-3">User Name</label><sup>*</sup>
+                                <input asp-for="@Model.StaffId" type="text" class="form-control">
+                                <span asp-validation-for="@Model.StaffId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-6">
+                            <div class="form-item w-100">
+                                <label class="form-label my-3">Staff Name</label><sup>*</sup>
+                                <input asp-for="@Model.StaffName" type="text" class="form-control">
+                                <span asp-validation-for="@Model.StaffName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-6">
+                            <div class="form-item w-100">
+                                <label class="form-label my-3">Password</label><sup>*</sup>
+                                <input asp-for="@Model.Password" type="password" class="form-control">
+                                <span asp-validation-for="@Model.Password" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-6">
+                            <div class="form-item w-100">
+                                <label class="form-label my-3">Comfirm Password</label><sup>*</sup>
+                                <input asp-for="@Model.ConfirmPassword" type="password" class="form-control">
+                                <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-item">
+                            <div class="form-item w-100">
+                                <label class="form-label my-3">Email</label><sup>*</sup>
+                                <input asp-for="@Model.Email" type="text" class="form-control">
+                                <span asp-validation-for="@Model.Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="py-2"></div>
+                        <div class="form-item">
+                            <div class="form-item w-100">
+                                <input asp-for="@Model.Gender" type="checkbox" class="form-check-input" id="Gender" name="Gender">
+                                <label class="form-check-label" for="Gender">Male?</label>
+                            </div>
+                        </div>
+                        <div class="form-item">
+                            <div class="form-item w-100">
+                                <label class="form-label my-3">Date of birth</label><sup>*</sup>
+                                <input asp-for="@Model.DoB" class="form-control">
+                                <span asp-validation-for="@Model.DoB" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-item">
+                            <div class="form-item w-100">
+                                <label class="form-label my-3">Address</label><sup>*</sup>
+                                <input asp-for="@Model.Address" type="text" class="form-control">
+                                <span asp-validation-for="@Model.Address" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-item">
+                            <div class="form-item w-100">
+                                <label class="form-label my-3">Phone number</label><sup>*</sup>
+                                <input asp-for="@Model.PhoneNumber" type="text" class="form-control">
+                                <span asp-validation-for="@Model.PhoneNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-6 col-xl-5">
+                    <label class="form-label my-3">Profile Picture</label>
+                    <div id="profile-container">
+                        <img id="profileImage" src="~/static/default-user-avatar.jpg" />
+                    </div>
+                    <input class="pt-3" id="imageUpload" type="file" name="Image" placeholder="Avatar" required="" capture />
+                </div>
+                <div class="row g-4 text-center align-items-center justify-content-center pt-4">
+                    <button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-50 text-primary">Add Staff</button>
+                    @if (ViewBag.Message != null)
+                    {
+                        <script type="text/javascript">
+                            window.onload = function () {
+                            alert("@ViewBag.Message");
+                            };
+                        </script>
+                    }
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            $("#Gender").change(function () {
+                if ($(this).prop("checked")) {
+                    $(this).val(true);
+                }
+                else {
+                    $(this).val(false);
+                }
+            });
+        });
+
+        imageUpload.onchange = evt => {
+            const [file] = imageUpload.files
+            if (file) {
+                profileImage.src = URL.createObjectURL(file)
+            }
+        }
+    </script>
+}

@@ -68,7 +68,7 @@ namespace ITProductECommerce.Configurations
             builder.HasOne(s => s.Staff)
                 .WithMany(o => o.Orders)
                 .HasForeignKey(o => o.StaffId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.SetNull);
         }
     }
 }
