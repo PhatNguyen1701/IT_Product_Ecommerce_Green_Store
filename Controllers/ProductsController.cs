@@ -60,7 +60,7 @@ namespace ITProductECommerce.Controllers
                 product.MainComments = product.MainComments ?? new List<MainComment>();
                 product.MainComments.Add(new MainComment
                 {
-                    CustomerId = vm.CustomerId,
+                    UserId = vm.UserId,
                     Message = vm.Message,
                     Created = DateTime.Now,
                     Rating = vm.Rating
@@ -73,7 +73,7 @@ namespace ITProductECommerce.Controllers
                 var comment = new SubComment
                 {
                     MainCommentId = vm.MainCommentId,
-                    CustomerId = vm.CustomerId,
+                    UserId = vm.UserId,
                     Message = vm.Message,
                     Created = DateTime.Now
                 };

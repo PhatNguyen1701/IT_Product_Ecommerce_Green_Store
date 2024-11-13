@@ -8,8 +8,8 @@
     <form method="post" asp-controller="Products" asp-action="Comment">
         <input asp-for="ProductId" type="hidden" />
         <input asp-for="MainCommentId" type="hidden" />
-        <input asp-for="CustomerId" type="hidden" />
-        <input asp-for="CustomerName" type="hidden" />
+        <input asp-for="UserId" type="hidden" />
+        <input asp-for="Username" type="hidden" />
         <input asp-for="Message" placeholder="Reply">
         <button type="submit">Post</button>
     </form>

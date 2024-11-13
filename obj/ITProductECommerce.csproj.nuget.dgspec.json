@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\ITProductECommerce.csproj": {}
+    "D:\\MyProjects\\ITProductECommerce_Identity_Ver\\ITProductECommerce\\ITProductECommerce.csproj": {}
   },
   "projects": {
-    "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\ITProductECommerce.csproj": {
+    "D:\\MyProjects\\ITProductECommerce_Identity_Ver\\ITProductECommerce\\ITProductECommerce.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\ITProductECommerce.csproj",
+        "projectUniqueName": "D:\\MyProjects\\ITProductECommerce_Identity_Ver\\ITProductECommerce\\ITProductECommerce.csproj",
         "projectName": "ITProductECommerce",
-        "projectPath": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\ITProductECommerce.csproj",
+        "projectPath": "D:\\MyProjects\\ITProductECommerce_Identity_Ver\\ITProductECommerce\\ITProductECommerce.csproj",
         "packagesPath": "C:\\Users\\EliteBook 840 G4\\.nuget\\packages\\",
-        "outputPath": "D:\\MyProjects\\ITProductECommerce\\ITProductECommerce\\obj\\",
+        "outputPath": "D:\\MyProjects\\ITProductECommerce_Identity_Ver\\ITProductECommerce\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -52,6 +52,14 @@
               "target": "Package",
               "version": "[12.0.1, )"
             },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.4, )"
+            },
+            "Microsoft.AspNetCore.Identity.UI": {
+              "target": "Package",
+              "version": "[8.0.4, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[8.0.4, )"
@@ -69,6 +77,10 @@
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[8.0.2, )"
+            },
+            "NETCore.MailKit": {
+              "target": "Package",
+              "version": "[2.1.0, )"
             },
             "PhotoSauce.MagicScaler": {
               "target": "Package",

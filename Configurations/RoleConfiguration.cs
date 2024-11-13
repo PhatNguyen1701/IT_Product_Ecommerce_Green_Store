@@ -8,19 +8,9 @@ namespace ITProductECommerce.Configurations
     {
         public void Configure(EntityTypeBuilder<Role> builder)
         {
-            builder.HasKey(r => r.RoleId);
-
-            builder.Property(r => r.RoleId)
-                .IsRequired()
-                .ValueGeneratedOnAdd();
-
             builder.Property(r => r.DepartmentId)
                 .IsRequired()
                 .HasColumnType("varchar(7)");
-
-            builder.Property(r => r.RoleName)
-                .IsRequired()
-                .HasColumnType("varchar(25)");
 
             builder.Property(r => r.IsAdd)
                 .IsRequired();

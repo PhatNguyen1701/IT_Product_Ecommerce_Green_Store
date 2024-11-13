@@ -61,4 +61,17 @@
             </div>
         </div>
     </div>
-    <!-- Single Product End -->
+</div>
+<!-- Single Product End -->
+
+@section Scripts{
+    <script>
+        var chat = localStorage.getItem("chatVisible");
+        if (chat == "True") {
+            $(".chat-popup").show();
+        }
+        else {
+            $(".chat-popup").hide();
+        }
+    </script>
+}

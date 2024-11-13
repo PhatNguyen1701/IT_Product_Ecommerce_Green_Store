@@ -8,7 +8,7 @@ namespace ITProductECommerce.ViewModels
         [Display(Name = "Username")]
         [Required(ErrorMessage = "Username is required")]
         [MaxLength(20, ErrorMessage = "Maximum 20 chars")]
-        public string CustomerId { get; set; }
+        public string UserId { get; set; }
 
         [Display(Name = "Password")]
         [DataType(DataType.Password)]
@@ -19,10 +19,15 @@ namespace ITProductECommerce.ViewModels
         [DataType(DataType.Password)]
         public string? ConfirmPassword { get; set; }
 
+        [Display(Name = "First Name")]
+        [Required(ErrorMessage = "Customer's name is required")]
+        [MaxLength(50, ErrorMessage = "Maximum 50 chars")]
+        public string FirstName { get; set; }
+
         [Display(Name = "Customer Name")]
         [Required(ErrorMessage = "Customer's name is required")]
         [MaxLength(50, ErrorMessage = "Maximum 50 chars")]
-        public string CustomerName { get; set; }
+        public string LastName { get; set; }
 
         public bool Gender { get; set; } = true;
 

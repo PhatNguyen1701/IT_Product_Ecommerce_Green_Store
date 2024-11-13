@@ -15,7 +15,7 @@ namespace ITProductECommerce.ViewModels
         public int AvgRating { get; set; }
         public int UnitInStock { get; set; }
         public IEnumerable<MainComment> MainComments { get; set; }
-        public string CustomerId { get; set; }
-        public string CustomerName { get; set; }
+        public string UserId { get; set; }
+        public string Username { get; set; }
     }
 }

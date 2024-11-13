@@ -51,6 +51,8 @@
 
   <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="8.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="8.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.4" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.4">
@@ -58,16 +60,17 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
+    <PackageReference Include="NETCore.MailKit" Version="2.1.0" />
     <PackageReference Include="PhotoSauce.MagicScaler" Version="0.9.1" />
   </ItemGroup>
 
   <ItemGroup>
     <Folder Include="wwwroot\img\Categories\" />
-    <Folder Include="wwwroot\img\Customers\" />
+    <Folder Include="wwwroot\img\Staff\" />
+    <Folder Include="wwwroot\img\User\" />
     <Folder Include="wwwroot\img\Discounts\" />
     <Folder Include="wwwroot\img\Products\" />
     <Folder Include="wwwroot\img\Providers\" />
-    <Folder Include="wwwroot\img\Staff\" />
   </ItemGroup>
 
 </Project>

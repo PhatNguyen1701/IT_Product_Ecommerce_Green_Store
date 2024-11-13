@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewData["Title"] = "Confirm Email";
+}
+
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Login</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Auth" asp-action="Register">Register</a></li>
+        <li class="breadcrumb-item active text-white">Confirm Email</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
+
+<div class="container-fluid py-5">
+    <div class="container py-5">
+        <h1 class="mb-4">Confirm Email Completed!</h1>
+        <p>
+            Thanks you for confirm your email, <a asp-controller="Auth" asp-action="Login">click here</a> to login to our website!
+        </p>
+    </div>
+</div>

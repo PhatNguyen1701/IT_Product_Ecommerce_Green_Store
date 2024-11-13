@@ -8,7 +8,7 @@
         public DateTime? CreatedAt { get; set; }
         public bool? IsActive { get; set; }
 
-        public Staff Staff { get; set; }
+        public User User { get; set; }
         public Department Department { get; set; }
     }
 }

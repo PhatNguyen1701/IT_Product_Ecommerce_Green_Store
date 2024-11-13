@@ -1,13 +1,17 @@
 ﻿using AutoMapper;
 using ITProductECommerce.Data;
 using ITProductECommerce.Helpers;
+using ITProductECommerce.Services.EmailServices;
 using ITProductECommerce.Services.Repositories;
 using ITProductECommerce.ViewModels;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using System.Security.Claims;
 
 namespace ITProductECommerce.Controllers
@@ -16,11 +20,24 @@ namespace ITProductECommerce.Controllers
     {
         private readonly IRepository _repository;
         private readonly ITProductCommerceContext _context;
+        private SignInManager<User> _signInManager;
+        private RoleManager<Role> _roleManager;
+        private readonly IEmailSender _emailSender;
+        private UserManager<User> _userManager;
 
-        public AuthController(IRepository repository, ITProductCommerceContext context)
+        public AuthController(IRepository repository,
+            ITProductCommerceContext context,
+            SignInManager<User> signInManager,
+            UserManager<User> userManager,
+            RoleManager<Role> roleManager,
+            IEmailSender emailSender)
         {
             _repository = repository;
             _context = context;
+            _userManager = userManager;
+            _signInManager = signInManager;
+            _roleManager = roleManager;
+            _emailSender = emailSender;
         }
 
         [HttpGet]
@@ -34,31 +51,61 @@ namespace ITProductECommerce.Controllers
         {
             if (ModelState.IsValid)
             {
-                try
+                var user = new User
                 {
-                    var data = _repository.Register(register, image);
-                    var claims = new List<Claim>
-                            {
-                                new Claim(ClaimTypes.Email, register.Email),
-                                new Claim(ClaimTypes.Name, register.CustomerName),
-                                new Claim(ClaimTypes.NameIdentifier, register.CustomerId),
+                    UserName = register.UserId,
+                    Email = register.Email,
+                    FirstName = register.FirstName,
+                    LastName = register.LastName,
+                    Gender = register.Gender,
+                    PhoneNumber = register.PhoneNumber,
+                    DoB = register.DoB,
+                    Address = register.Address,
+                    AvatarURL = register.AvatarURL,
+                    IsAdmin = false,
+                    IsStaff = false
+                };
 
-                                new Claim(ClaimTypes.Role, "Customer")
-                            };
-                    var claimsIdentity = new ClaimsIdentity(claims,
-                        CookieAuthenticationDefaults.AuthenticationScheme);
-                    var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-                    await HttpContext.SignInAsync(claimsPrincipal);
-
-                    return RedirectToAction("Index", "Home");
+                if (image != null)
+                {
+                    user.AvatarURL = Util.UploadImage(image, "User");
                 }
-                catch (Exception ex)
+
+                var result = await _userManager.CreateAsync(user, register.Password);
+
+                if (result.Succeeded)
                 {
-                    Console.WriteLine(ex.Message);
+                    var token = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var confirmationLink = Url.Action(nameof(ConfirmEmail), "Auth", new { token, email = user.Email }, Request.Scheme);
+                    var message = new Message(new string[] { user.Email }, "Confirmation email token link", "GREEN STORE CUSTOMERS SUPPORT\n" + "Here is your link to confirm your email address, please click below link to process:\n" + "\n" + confirmationLink);
+                    _emailSender.SendEmail(message);
+
+                    var customerRole = await _roleManager.FindByNameAsync("customer");
+                    await _userManager.AddToRoleAsync(user, customerRole.Name);
+
+                    return RedirectToAction(nameof(SuccessRegistration));
                 }
             }
             return View(register);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ConfirmEmail(string token, string email)
+        {
+            var user = await _userManager.FindByEmailAsync(email);
+            if (user == null)
+            {
+                TempData["Message"] = $"This email {email} was not found!";
+                return Redirect("/404");
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, token);
+            return View(result.Succeeded ? nameof(ConfirmEmail) : "/404");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> SuccessRegistration()
+        {
+            return View();
         }
 
         [HttpGet]
@@ -71,56 +118,38 @@ namespace ITProductECommerce.Controllers
         [HttpPost]
         public async Task<IActionResult> Login(LoginVM login, string? returnURL)
         {
-            ViewBag.ReturnURL = returnURL;
-            if (ModelState.IsValid)
+            var result = await _signInManager.PasswordSignInAsync(login.Username, login.Password, login.RememberMe, false);
+
+            if (!result.Succeeded)
             {
-                var customer = _context.Customers.SingleOrDefault(c => c.CustomerId == login.Username);
-                if (customer == null)
+                ModelState.AddModelError("", "Invalid Login Attempt");
+                return View(login);
+            }
+            else
+            {
+                var user = await _userManager.FindByNameAsync(login.Username);
+                if(user == null)
                 {
-                    ModelState.AddModelError("Error", "Customer's account was not found!");
+                    ModelState.AddModelError("", "User Was Not Found");
+                    return View(login);
+                }
+
+                var isAdmin = await _userManager.IsInRoleAsync(user, "admin");
+                var isStaff = await _userManager.IsInRoleAsync(user, "staff");
+
+                if (isAdmin == true || isStaff == true)
+                {
+                    return RedirectToAction("Index", "AdminPanel");
+                }
+                else if (Url.IsLocalUrl(returnURL))
+                {
+                    return Redirect(returnURL);
                 }
                 else
                 {
-                    if (!customer.IsActive)
-                    {
-                        ModelState.AddModelError("Error", "This account have been blocked! Contact the Admin to learn more infomation");
-                    }
-                    else
-                    {
-                        if (customer.Password != login.Password.ToMd5Hash(customer.RandomKey))
-                        {
-                            ModelState.AddModelError("Error", "Password was incorrect!");
-                        }
-                        else
-                        {
-                            var claims = new List<Claim>
-                                {
-                                    new Claim(ClaimTypes.Email, customer.Email),
-                                    new Claim(ClaimTypes.Name, customer.CustomerName),
-                                    new Claim(ClaimTypes.NameIdentifier, customer.CustomerId),
-
-                                    //claim động cho phần role
-                                    new Claim(ClaimTypes.Role, "Customer")
-                                };
-                            var claimsIdentity = new ClaimsIdentity(claims,
-                                CookieAuthenticationDefaults.AuthenticationScheme);
-                            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-                            await HttpContext.SignInAsync(claimsPrincipal);
-
-                            if (Url.IsLocalUrl(returnURL))
-                            {
-                                return Redirect(returnURL);
-                            }
-                            else
-                            {
-                                return Redirect("/");
-                            }
-                        }
-                    }
+                    return RedirectToAction("Index", "Home");
                 }
             }
-            return View(login);
         }
 
         [HttpGet]
@@ -130,91 +159,14 @@ namespace ITProductECommerce.Controllers
             return View();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> StaffLogin(LoginVM login, string? returnURL)
-        {
-            ViewBag.ReturnURL = returnURL;
-            if (ModelState.IsValid)
-            {
-                var staff = _context.Staff.SingleOrDefault(c => c.StaffId == login.Username);
-                if (staff == null)
-                {
-                    ModelState.AddModelError("Error", "Staff's account was not found!");
-                }
-                else
-                {
-                    if (staff.Password != login.Password.ToMd5Hash(staff.RandomKey))
-                    {
-                        ModelState.AddModelError("Error", "Password was incorrect!");
-                    }
-                    else
-                    {
-                        if (staff.RoleId == 1)
-                        {
-                            var claims = new List<Claim>
-                                {
-                                    new Claim(ClaimTypes.Email, staff.Email),
-                                    new Claim(ClaimTypes.Name, staff.StaffName),
-                                    new Claim(ClaimTypes.NameIdentifier, staff.StaffId),
-
-                                    //claim động cho phần role
-                                    new Claim(ClaimTypes.Role, "Admin")
-                                };
-                            var claimsIdentity = new ClaimsIdentity(claims,
-                                CookieAuthenticationDefaults.AuthenticationScheme);
-                            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-                            await HttpContext.SignInAsync(claimsPrincipal);
-
-                            if (Url.IsLocalUrl(returnURL))
-                            {
-                                return Redirect(returnURL);
-                            }
-                            else
-                            {
-                                return RedirectToAction("Index", "AdminPanel");
-                            }
-                        }
-                        else
-                        {
-                            var claims = new List<Claim>
-                                {
-                                    new Claim(ClaimTypes.Email, staff.Email),
-                                    new Claim(ClaimTypes.Name, staff.StaffName),
-                                    new Claim(ClaimTypes.NameIdentifier, staff.StaffId),
-
-                                    //claim động cho phần role
-                                    new Claim(ClaimTypes.Role, "Staff")
-                                };
-                            var claimsIdentity = new ClaimsIdentity(claims,
-                                CookieAuthenticationDefaults.AuthenticationScheme);
-                            var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
-
-                            await HttpContext.SignInAsync(claimsPrincipal);
-
-                            if (Url.IsLocalUrl(returnURL))
-                            {
-                                return Redirect(returnURL);
-                            }
-                            else
-                            {
-                                return RedirectToAction("Index", "AdminPanel");
-                            }
-                        }
-                    }
-                }
-            }
-            return View(login);
-        }
-
         [Authorize]
-        public IActionResult UserProfile(string customerName)
+        public IActionResult UserProfile(string username)
         {
-            var data = _repository.GetUserProfile(customerName);
+            var data = _repository.GetUserProfile(username);
 
             if (data == null)
             {
-                TempData["Message"] = $"This {customerName} name was not found!";
+                TempData["Message"] = $"This {username} name was not found!";
                 return Redirect("/404");
             }
 
@@ -223,58 +175,58 @@ namespace ITProductECommerce.Controllers
 
         [Authorize]
         [HttpGet]
-        public IActionResult UpdateUserProfile(string customerId)
+        public IActionResult UpdateUserProfile(string userId)
         {
-            if (customerId == null)
+            if (userId == null)
             {
                 return View(new UserProfileVM());
             }
             else
             {
-                var customer = _repository.GetUserById(customerId);
+                var user = _repository.GetUserById(userId);
 
                 return View(new UserProfileVM
                 {
-                    CustomerId = customer.CustomerId,
-                    Password = customer.Password,
+                    UserId = user.UserName,
                     ConfirmPassword = "",
-                    CustomerName = customer.CustomerName,
-                    Gender = customer.Gender,
-                    DoB = customer.DoB,
-                    Address = customer.Address,
-                    PhoneNumber = customer.PhoneNumber,
-                    Email = customer.Email,
-                    AvatarURL = customer.AvatarURL
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Gender = user.Gender,
+                    DoB = user.DoB,
+                    Address = user.Address,
+                    PhoneNumber = user.PhoneNumber,
+                    Email = user.Email,
+                    AvatarURL = user.AvatarURL
                 });
             }
         }
 
         [Authorize]
         [HttpPost]
-        public IActionResult UpdateUserProfile(UserProfileVM userProfile, IFormFile image)
+        public async Task<IActionResult> UpdateUserProfile(UserProfileVM userProfile, IFormFile image)
         {
             if (ModelState.IsValid)
             {
-                var data = _repository.UpdateUserProfile(userProfile, image);
+                var data = await _repository.UpdateUserProfile(userProfile, image);
 
                 if (data == false)
                 {
-                    TempData["Message"] = $"This {userProfile.CustomerId} ID of user was not found!";
+                    TempData["Message"] = $"This {userProfile.UserId} ID of user was not found!";
                     return Redirect("/404");
                 }
                 else
                 {
                     ViewBag.Message = "Update User's profile Successfully!";
-                    return RedirectToAction("UserProfile", "Auth", new { customerName = userProfile.CustomerName });
+                    return RedirectToAction("UserProfile", "Auth", new { username = userProfile.UserId });
                 }
             }
             return View(userProfile);
         }
 
         [Authorize]
-        public IActionResult DeleteUser(string userId)
+        public async Task<IActionResult> DeleteUser(string userId)
         {
-            var data = _repository.DeleteUser(userId);
+            var data = await _repository.DeleteUser(userId);
 
             if (data == false)
             {
@@ -289,10 +241,86 @@ namespace ITProductECommerce.Controllers
         }
 
         [Authorize]
+        [HttpGet]
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync();
+            await _signInManager.SignOutAsync();
             return Redirect("/");
+        }
+
+        [HttpGet]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordVM forgotPasswordVM)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(forgotPasswordVM);
+            }
+
+            var user = await _userManager.FindByEmailAsync(forgotPasswordVM.Email);
+            if (user == null)
+            {
+                TempData["Message"] = $"This email {forgotPasswordVM.Email} was not found!";
+                return Redirect("/404");
+            }
+
+            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+            var callback = Url.Action(nameof(ResetPassword), "Auth", new { token, email = user.Email }, Request.Scheme);
+            var message = new Message(new string[] { user.Email }, "Reset password token link", "GREEN STORE CUSTOMERS SUPPORT\n" + "Here is your link to reset your password, please do not share or publish the link to secure your account:\n" + "\n" + callback);
+            _emailSender.SendEmail(message);
+
+            return RedirectToAction(nameof(ForgotPasswordConfirmation));
+        }
+
+        public IActionResult ForgotPasswordConfirmation()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult ResetPassword(string token, string email)
+        {
+            var model = new ResetPasswordVM { Token = token, Email = email };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResetPassword(ResetPasswordVM resetPasswordModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(resetPasswordModel);
+            }
+
+            var user = await _userManager.FindByEmailAsync(resetPasswordModel.Email);
+            if (user == null)
+            {
+                RedirectToAction(nameof(ResetPasswordConfirmation));
+            }
+
+            var resetPassResult = await _userManager.ResetPasswordAsync(user, resetPasswordModel.Token, resetPasswordModel.Password);
+            if (!resetPassResult.Succeeded)
+            {
+                foreach (var error in resetPassResult.Errors)
+                {
+                    ModelState.TryAddModelError(error.Code, error.Description);
+                }
+                return View();
+            }
+            return RedirectToAction(nameof(ResetPasswordConfirmation));
+        }
+
+        [HttpGet]
+        public IActionResult ResetPasswordConfirmation()
+        {
+            return View();
         }
     }
 }

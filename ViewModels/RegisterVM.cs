@@ -7,8 +7,8 @@ namespace ITProductECommerce.ViewModels
     {
         [Display(Name = "Username")]
         [Required(ErrorMessage ="Username is required")]
-        [MaxLength(20, ErrorMessage ="Maximum 20 chars")]
-        public string CustomerId { get; set; }
+        [MaxLength(50, ErrorMessage ="Maximum 50 chars")]
+        public string UserId { get; set; }
 
         [Display(Name = "Password")]
         [Required(ErrorMessage = "Password is required")]
@@ -21,10 +21,15 @@ namespace ITProductECommerce.ViewModels
         [DataType(DataType.Password)]
         public string ConfirmPassword { get; set; }
 
-        [Display(Name = "Customer Name")]
-        [Required(ErrorMessage = "Customer's name is required")]
+        [Display(Name = "First Name")]
+        [Required(ErrorMessage = "First name is required")]
         [MaxLength(50, ErrorMessage = "Maximum 50 chars")]
-        public string CustomerName { get; set; }
+        public string FirstName { get; set; }
+
+        [Display(Name = "Last Name")]
+        [Required(ErrorMessage = "Last name is required")]
+        [MaxLength(50, ErrorMessage = "Maximum 50 chars")]
+        public string LastName { get; set; }
 
         public bool Gender { get; set; } = true;
 
@@ -33,7 +38,7 @@ namespace ITProductECommerce.ViewModels
         public DateTime? DoB { get; set; }
 
         [Display(Name = "Address")]
-        [MaxLength(60, ErrorMessage = "Maximum 60 chars")]
+        [MaxLength(100, ErrorMessage = "Maximum 100 chars")]
         public string Address { get; set; }
 
         [Display(Name = "Phone Number")]
@@ -45,7 +50,7 @@ namespace ITProductECommerce.ViewModels
         [EmailAddress(ErrorMessage ="Email format error")]
         public string Email { get; set; }
 
-        [Display(Name ="Image")]
-        public string? AvatarURL { get; set; }
+        [Display(Name = "Image")]
+        public string? AvatarURL { get; set; } = "";
     }
 }

@@ -18,14 +18,14 @@ namespace ITProductECommerce.Configurations
                 .IsRequired()
                 .HasColumnType("nvarchar(max)");
 
-            builder.HasOne(mc => mc.MainComment)
-                .WithMany(sc => sc.SubComments)
+            builder.HasOne(sc => sc.MainComment)
+                .WithMany(mc => mc.SubComments)
                 .HasForeignKey(sc => sc.MainCommentId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(c => c.Customer)
-                .WithMany(sc => sc.SubComments)
-                .HasForeignKey(sc => sc.CustomerId)
+            builder.HasOne(sc => sc.User)
+                .WithMany(u => u.SubComments)
+                .HasForeignKey(sc => sc.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

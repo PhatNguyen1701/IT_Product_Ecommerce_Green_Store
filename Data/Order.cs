@@ -3,7 +3,7 @@
     public class Order
     {
         public int OrderId { get; set; }
-        public string CustomerId { get; set; } = "";
+        public string UserId { get; set; } = "";
         public DateTime? OrderDate { get; set; }
         public DateTime? Deadline { get; set; }
         public DateTime? DeliveryDate { get; set; }
@@ -16,10 +16,8 @@
         public int StatusId { get; set; }
         public string? StaffId { get; set; } = "";
         public string? Note { get; set; }
-
-        public Customer Customer { get; set; }
         public Status Status { get; set; }
-        public Staff Staff { get; set; }
+        public User User { get; set; }
         public ICollection<OrderDetail> OrderDetails { get; set; }
 
     }

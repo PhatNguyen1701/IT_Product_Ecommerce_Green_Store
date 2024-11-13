@@ -18,9 +18,9 @@ namespace ITProductECommerce.Configurations
                 .IsRequired()
                 .HasColumnType("nvarchar(max)");
 
-            builder.HasOne(c => c.Customer)
-                .WithMany(mc => mc.MainComments)
-                .HasForeignKey(mc => mc.CustomerId)
+            builder.HasOne(mc => mc.User)
+                .WithMany(u => u.MainComments)
+                .HasForeignKey(mc => mc.UserId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             builder.HasOne(p => p.Product)

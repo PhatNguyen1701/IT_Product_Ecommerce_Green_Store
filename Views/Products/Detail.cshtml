@@ -129,11 +129,11 @@
                                 @foreach (var c in Model.MainComments)
                                 {
                                     <div class="d-flex">
-                                        <img src="~/img/Customers/@c.Customer.AvatarURL" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
+                                        <img src="~/img/User/@c.User.AvatarURL" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
                                         <div class="">
                                             <p class="mb-2" style="font-size: 14px;">@c.Created</p>
                                             <div class="d-flex justify-content">
-                                                <h5>@c.Customer.CustomerName</h5>
+                                                <h5>@c.User.UserName</h5>
                                                 <div style="padding-top: 3px; padding-left: 1.5rem;;" class="d-flex mb-3">
                                                     @for (int i = 1; i <= c.Rating; i++)
                                                     {
@@ -153,17 +153,17 @@
                                     <div style="padding-left: 6.4rem; padding-bottom: 2rem;">
                                         @if (User.Identity.IsAuthenticated)
                                         {
-                                            await Html.RenderPartialAsync("_SubComment", new ITProductECommerce.ViewModels.CommentVM { ProductId = Model.ProductId, MainCommentId = c.MainCommentId, CustomerId = Model.CustomerId, CustomerName = Model.CustomerName });
+                                            await Html.RenderPartialAsync("_SubComment", new ITProductECommerce.ViewModels.CommentVM { ProductId = Model.ProductId, MainCommentId = c.MainCommentId, UserId = Model.UserId, Username = Model.Username });
                                         }
 
                                         @foreach (var sc in c.SubComments)
                                         {
                                             <div class="d-flex">
-                                                <img src="~/img/Customers/@sc.Customer.AvatarURL" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
+                                                <img src="~/img/User/@sc.User.AvatarURL" class="img-fluid rounded-circle p-3" style="width: 100px; height: 100px;" alt="">
                                                 <div class="">
                                                     <p class="mb-2" style="font-size: 14px;">@sc.Created</p>
                                                     <div class="d-flex justify-content-between">
-                                                        <h5>@sc.Customer.CustomerName</h5>
+                                                        <h5>@sc.User.UserName</h5>
                                                     </div>
                                                     <p>
                                                         @sc.Message
@@ -183,7 +183,7 @@
                     </div>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        await Html.RenderPartialAsync("_MainComment", new ITProductECommerce.ViewModels.CommentVM { ProductId = Model.ProductId, MainCommentId = 0, CustomerId = Model.CustomerId, CustomerName = Model.CustomerName });
+                        await Html.RenderPartialAsync("_MainComment", new ITProductECommerce.ViewModels.CommentVM { ProductId = Model.ProductId, MainCommentId = 0, UserId = Model.UserId, Username = Model.Username });
                     }
                     else
                     {
@@ -222,3 +222,15 @@
     </div>
 </div>
 <!-- Single Product End -->
+
+@section Scripts{
+    <script>
+        var chat = localStorage.getItem("chatVisible");
+        if (chat == "True") {
+            $(".chat-popup").show();
+        }
+        else {
+            $(".chat-popup").hide();
+        }
+    </script>
+}

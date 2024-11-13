@@ -6,9 +6,9 @@
         public string Message { get; set; } = "";
         public DateTime Created { get; set; }
         public int MainCommentId { get; set; }
-        public string CustomerId { get; set; }
+        public string UserId { get; set; }
 
         public MainComment MainComment { get; set; }
-        public Customer Customer { get; set; }
+        public User User { get; set; }
     }
 }

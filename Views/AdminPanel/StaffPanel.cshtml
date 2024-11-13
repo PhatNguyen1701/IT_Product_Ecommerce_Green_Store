@@ -28,7 +28,8 @@
                 <thead>
                     <tr>
                         <th scope="col">Staff ID</th>
-                        <th scope="col">Staff Name</th>
+                        <th scope="col">First Name</th>
+                        <th scope="col">Last Name</th>
                         <th scope="col">Email</th>
                         <th scope="col">Gender</th>
                         <th scope="col">Date of birth</th>
@@ -40,18 +41,21 @@
                 <tbody>
                     @foreach (var item in Model.Staffs)
                     {
-                        if (item.StaffId == "sysadmin")
+                        if (item.UserName == "sysadmin" || item.IsStaff == false)
                         {
                             continue;
                         }
                         <tr>
                             <td>
                                 <p class="mb-0 mt-4">
-                                    @item.StaffId
+                                    @item.UserName
                                 </p>
                             </td>
                             <td>
-                                <p class="mb-0 mt-4">@item.StaffName</p>
+                                <p class="mb-0 mt-4">@item.FirstName</p>
+                            </td>
+                            <td>
+                                <p class="mb-0 mt-4">@item.LastName</p>
                             </td>
                             <td>
                                 <p class="mb-0 mt-4">@item.Email</p>
@@ -69,10 +73,10 @@
                                 <p class="mb-0 mt-4">@item.PhoneNumber</p>
                             </td>
                             <td>
-                                <a asp-controller="AdminPanel" asp-action="EditStaff" asp-route-staffId="@item.StaffId" class="btn btn-md rounded-circle bg-light border mt-4">
+                                <a asp-controller="AdminPanel" asp-action="EditStaff" asp-route-staffId="@item.UserName" class="btn btn-md rounded-circle bg-light border mt-4">
                                     <i class="bi bi-card-list"></i>
                                 </a>
-                                <a asp-controller="AdminPanel" asp-action="RemoveStaff" asp-route-staffId="@item.StaffId" class="btn btn-md rounded-circle bg-light border mt-4">
+                                <a asp-controller="AdminPanel" asp-action="RemoveStaff" asp-route-staffId="@item.UserName" class="btn btn-md rounded-circle bg-light border mt-4">
                                     <i class="fa fa-times text-danger"></i>
                                 </a>
                             </td>

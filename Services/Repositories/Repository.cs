@@ -10,6 +10,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using System.Globalization;
 using System.Net;
+using Microsoft.AspNetCore.Identity;
 
 namespace ITProductECommerce.Services.Repositories
 {
@@ -19,15 +20,21 @@ namespace ITProductECommerce.Services.Repositories
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly ISession _session;
         private readonly IMapper _mapper;
+        private UserManager<User> _userManager;
+        private RoleManager<Role> _roleManager;
 
         public Repository(ITProductCommerceContext context,
             IHttpContextAccessor httpContextAccessor,
-            IMapper mapper)
+            IMapper mapper,
+            UserManager<User> userManager,
+            RoleManager<Role> roleManager)
         {
             _context = context;
             _httpContextAccessor = httpContextAccessor;
             _session = _httpContextAccessor.HttpContext.Session;
             _mapper = mapper;
+            _userManager = userManager;
+            _roleManager = roleManager;
         }
 
         #region Product
@@ -147,10 +154,10 @@ namespace ITProductECommerce.Services.Repositories
                 .Include(p => p.Category)
                 .Include(pv => pv.Provider)
                 .Include(mc => mc.MainComments)
-                    .ThenInclude(c => c.Customer)
+                    .ThenInclude(c => c.User)
                 .Include(mc => mc.MainComments)
                     .ThenInclude(sc => sc.SubComments)
-                        .ThenInclude(c => c.Customer)
+                        .ThenInclude(c => c.User)
                 .SingleOrDefault(p => p.ProductId == productId);
 
             var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -169,8 +176,8 @@ namespace ITProductECommerce.Services.Repositories
                 Detail = product.Description ?? "",
                 AvgRating = product.AvgRating,
                 UnitInStock = product.UnitInStock,
-                CustomerId = userId,
-                CustomerName = username
+                UserId = userId,
+                Username = username
             };
 
             return result;
@@ -184,7 +191,7 @@ namespace ITProductECommerce.Services.Repositories
                 .FirstOrDefault(p => p.ProductId == productId);
         }
 
-        public void AddProduct(ProductVM product, IFormFile image, IFormFile currentImage)
+        public void AddProduct(ProductVM product, IFormFile image)
         {
             var _product = new Product
             {
@@ -202,16 +209,8 @@ namespace ITProductECommerce.Services.Repositories
                 UnitInStock = product.UnitInStock
             };
 
-            if (image == null)
+            if (image != null)
             {
-                _product.ImageURL = Util.UploadImage(currentImage, "Products");
-            }
-            else
-            {
-                if(currentImage != null)
-                {
-                    Util.RemoveImage(currentImage, "Products");
-                }
                 _product.ImageURL = Util.UploadImage(image, "Products");
             }
 
@@ -233,7 +232,7 @@ namespace ITProductECommerce.Services.Repositories
             return false;
         }
 
-        public bool UpdateProduct(ProductVM product, IFormFile image, IFormFile currentImage)
+        public bool UpdateProduct(ProductVM product, IFormFile image)
         {
             var _product = _context.Products.SingleOrDefault(p => p.ProductId == product.ProductId);
 
@@ -244,22 +243,22 @@ namespace ITProductECommerce.Services.Repositories
                 _product.CategoryId = product.CategoryId;
                 _product.UnitDescription = product.UnitDescription;
                 _product.UnitPrice = product.UnitPrice;
-                //if (image != null)
-                //{
-                //    _product.ImageURL = Util.UploadImage(image, "HangHoa");
-                //}
-                if (image == null)
+                if (image != null)
                 {
-                    _product.ImageURL = Util.UploadImage(currentImage, "Products");
-                }
-                else
-                {
-                    if (currentImage != null)
-                    {
-                        Util.RemoveImage(currentImage, "Products");
-                    }
                     _product.ImageURL = Util.UploadImage(image, "Products");
                 }
+                //if (image == null)
+                //{
+                //    _product.ImageURL = Util.UploadImage(currentImage, "Products");
+                //}
+                //else
+                //{
+                //    if (currentImage != null)
+                //    {
+                //        Util.RemoveImage(currentImage, "Products");
+                //    }
+                //    _product.ImageURL = Util.UploadImage(image, "Products");
+                //}
                 _product.CreatedAt = DateTime.Now;
                 _product.Discount = product.Discount;
                 _product.Viewed = product.Viewed;
@@ -359,19 +358,19 @@ namespace ITProductECommerce.Services.Repositories
         {
             //var customerId = _httpContextAccessor.HttpContext.User.Claims.SingleOrDefault(c =>
             //    c.Type == AppConst.CUSTOMER_ID).Value;
-            var customerId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var customer = new Customer();
-            if (checkoutVM.IsCustomer)
+            var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = new User();
+            if (checkoutVM.IsUser)
             {
-                customer = _context.Customers.SingleOrDefault(c => c.CustomerId == customerId);
+                user = _context.Users.SingleOrDefault(c => c.Id.Equals(userId));
             }
 
             var order = new Order
             {
-                CustomerId = customerId,
-                ReceiverName = checkoutVM.ReceiverName ?? customer.CustomerName,
-                Address = checkoutVM.Address ?? customer.Address,
-                PhoneNumber = checkoutVM.PhoneNumber ?? customer.PhoneNumber,
+                UserId = userId,
+                ReceiverName = checkoutVM.ReceiverName ?? user.UserName,
+                Address = checkoutVM.Address ?? user.Address,
+                PhoneNumber = checkoutVM.PhoneNumber ?? user.PhoneNumber,
                 OrderDate = DateTime.Now,
                 PaymentMethod = "COD",
                 TypeShipping = "GRAB",
@@ -415,33 +414,16 @@ namespace ITProductECommerce.Services.Repositories
         #endregion
 
         #region Auth
-        public RegisterVM Register(RegisterVM register, IFormFile image)
+
+        public User GetUserById(string userId)
         {
-            var customer = _mapper.Map<Customer>(register);
-            customer.RandomKey = Util.GenerateRandomKey();
-            customer.Password = register.Password.ToMd5Hash(customer.RandomKey);
-            customer.IsActive = true;
-            customer.RoleId = 4;
-
-            if (image != null)
-            {
-                customer.AvatarURL = Util.UploadImage(image, "Customers");
-            }
-
-            _context.Add(customer);
-            _context.SaveChanges();
-
-            return register;
+            return _context.Users.SingleOrDefault(c => c.UserName.Equals(userId));
         }
 
-        public Customer GetUserById(string customerId)
+        public UserProfileVM GetUserProfile(string userId)
         {
-            return _context.Customers.SingleOrDefault(c => c.CustomerId.Equals(customerId));
-        }
-
-        public UserProfileVM GetUserProfile(string customerName)
-        {
-            var user = _context.Customers.SingleOrDefault(c => c.CustomerName.Equals(customerName));
+            var user = _context.Users.Where(u => u.IsStaff == false)
+                .SingleOrDefault(c => c.UserName.Equals(userId));
 
             if (user == null)
             {
@@ -450,9 +432,9 @@ namespace ITProductECommerce.Services.Repositories
 
             var result = new UserProfileVM
             {
-                CustomerId = user.CustomerId,
-                Password = user.Password,
-                CustomerName = user.CustomerName,
+                UserId = user.UserName,
+                FirstName = user.FirstName,
+                LastName = user.LastName,
                 Gender = user.Gender,
                 DoB = user.DoB,
                 Address = user.Address,
@@ -464,49 +446,47 @@ namespace ITProductECommerce.Services.Repositories
             return result;
         }
 
-        public bool UpdateUserProfile(UserProfileVM userProfile, IFormFile image)
+        public async Task<bool> UpdateUserProfile(UserProfileVM userProfile, IFormFile image)
         {
-            var customer = _context.Customers.SingleOrDefault(c => c.CustomerId.Equals(userProfile.CustomerId));
+            var user = _context.Users.SingleOrDefault(c => c.UserName.Equals(userProfile.UserId));
 
-            if (customer != null)
+            if (user != null)
             {
-                if (userProfile.Password == null)
+                if (userProfile.Password != null)
                 {
-                    customer.Password = customer.Password;
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                    var updatePWResult = await _userManager.ResetPasswordAsync(user, token, userProfile.Password);
                 }
-                else
-                {
-                    customer.Password = userProfile.Password.ToMd5Hash(customer.RandomKey);
-                }
-                customer.CustomerName = userProfile.CustomerName;
-                customer.Gender = userProfile.Gender;
-                customer.DoB = userProfile.DoB;
-                customer.Address = userProfile.Address;
-                customer.PhoneNumber = userProfile.PhoneNumber;
-                customer.Email = userProfile.Email;
-
-                //customer = _mapper.Map<Customer>(userProfile);
+                user.FirstName = userProfile.FirstName;
+                user.LastName = userProfile.LastName;
+                user.Gender = userProfile.Gender;
+                user.DoB = userProfile.DoB;
+                user.Address = userProfile.Address;
+                user.PhoneNumber = userProfile.PhoneNumber;
+                user.Email = userProfile.Email;
 
                 if (image != null)
                 {
-                    customer.AvatarURL = Util.UploadImage(image, "Customer");
+                    user.AvatarURL = Util.UploadImage(image, "User");
                 }
-                _context.Update(customer);
-                _context.SaveChanges();
 
-                return true;
+                var result = await _userManager.UpdateAsync(user);
+
+                if (result.Succeeded)
+                {
+                    return true;
+                }
             }
             return false;
         }
 
-        public bool DeleteUser(string userId)
+        public async Task<bool> DeleteUser(string userId)
         {
-            var customer = _context.Customers.SingleOrDefault(c => c.CustomerId.Equals(userId));
+            var user = _context.Users.SingleOrDefault(c => c.UserName.Equals(userId));
 
-            if (customer != null)
+            if (user != null)
             {
-                _context.Remove(customer);
-                _context.SaveChanges();
+                var result = await _userManager.DeleteAsync(user);
 
                 return true;
             }
@@ -642,15 +622,14 @@ namespace ITProductECommerce.Services.Repositories
             int skipAmount = pageSize * (pageNumber - 1);
 
             var orders = _context.Orders
-                .Include(o => o.Customer)
+                .Include(o => o.User)
                 .Include(o => o.Status)
-                .Include(o => o.Staff)
                 .AsQueryable().AsNoTracking();
 
             if (!String.IsNullOrEmpty(search))
             {
                 orders = orders.Where(o => EF.Functions.Like(o.ReceiverName, $"%{search}%") ||
-                    EF.Functions.Like(o.CustomerId, $"%{search}%") ||
+                    EF.Functions.Like(o.User.UserName, $"%{search}%") ||
                     EF.Functions.Like(o.Address, $"%{search}%") ||
                     EF.Functions.Like(o.PhoneNumber, $"%{search}%"));
             }
@@ -715,11 +694,6 @@ namespace ITProductECommerce.Services.Repositories
         }
         #endregion
 
-        public List<Role> GetAllRole()
-        {
-            return _context.Roles.ToList();
-        }
-
         #region Staff Management
 
         public StaffViewModel GetAllStaff(string? search, int pageNumber)
@@ -727,13 +701,13 @@ namespace ITProductECommerce.Services.Repositories
             int pageSize = 9;
             int skipAmount = pageSize * (pageNumber - 1);
 
-            var staffs = _context.Staff
+            var staffs = _context.Users
                 .AsQueryable().AsNoTracking();
 
             if (!String.IsNullOrEmpty(search))
             {
-                staffs = staffs.Where(o => EF.Functions.Like(o.StaffName, $"%{search}%") ||
-                    EF.Functions.Like(o.Email, $"%{search}%"));
+                staffs = staffs.Where(o => EF.Functions.Like(o.UserName, $"%{search}%") ||
+                    EF.Functions.Like(o.Email, $"%{search}%") && o.IsStaff == true);
             }
 
             int orderCount = staffs.Count();
@@ -753,80 +727,95 @@ namespace ITProductECommerce.Services.Repositories
             };
         }
 
-        public void AddStaff(StaffViewModel staff, IFormFile image)
+        public async Task<bool> AddStaff(StaffViewModel vm, IFormFile image)
         {
-            var _staff = new Staff
+            var _staff = new User
             {
-                StaffId = staff.StaffId,
-                StaffName = staff.StaffName,
-                Email = staff.Email,
-                Gender = staff.Gender,
-                Address = staff.Address,
-                DoB = staff.DoB,
-                PhoneNumber = staff.PhoneNumber,
-                RoleId = 3,
-                IsActive = true
+                UserName = vm.StaffId,
+                FirstName = vm.FirstName,
+                LastName = vm.LastName,
+                Email = vm.Email,
+                Gender = vm.Gender,
+                Address = vm.Address,
+                DoB = vm.DoB,
+                PhoneNumber = vm.PhoneNumber,
+                EmailConfirmed = true,
+                IsStaff = true,
+                IsAdmin = false
             };
-            _staff.RandomKey = Util.GenerateRandomKey();
-            _staff.Password = staff.Password.ToMd5Hash(_staff.RandomKey);
 
             if (image != null)
             {
                 _staff.AvatarURL = Util.UploadImage(image, "Staff");
             }
 
-            _context.Add(_staff);
-            _context.SaveChanges();
+            var staffRole = await _roleManager.FindByNameAsync("staff");
+            var result = await _userManager.CreateAsync(_staff, vm.Password);
+            if (result.Succeeded)
+            {
+                _userManager.AddToRoleAsync(_staff, staffRole.Name).GetAwaiter().GetResult();
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
 
-        public bool UpdateStaff(StaffViewModel staff, IFormFile image)
+        public async Task<bool> UpdateStaff(StaffViewModel vm, IFormFile image)
         {
-            var _staff = _context.Staff.SingleOrDefault(s => s.StaffId.Equals(staff.StaffId));
+            var _staff = _context.Users.Where(u => u.IsStaff == true)
+                .SingleOrDefault(s => s.UserName.Equals(vm.StaffId));
 
             if (_staff != null)
             {
-                if (staff.Password == null)
+                if (vm.Password != null)
                 {
-                    _staff.Password = _staff.Password;
+                    var token = await _userManager.GeneratePasswordResetTokenAsync(_staff);
+                    var updatePWResult = await _userManager.ResetPasswordAsync(_staff, token, vm.Password);
                 }
-                else
-                {
-                    _staff.Password = staff.Password.ToMd5Hash(_staff.RandomKey);
-                }
-                _staff.StaffName = staff.StaffName;
-                _staff.Email = staff.Email;
-                _staff.Gender = staff.Gender;
-                _staff.Address = staff.Address;
-                _staff.DoB = staff.DoB;
-                _staff.PhoneNumber = staff.PhoneNumber;
+
+                _staff.FirstName = vm.FirstName;
+                _staff.LastName = vm.LastName;
+                _staff.Email = vm.Email;
+                _staff.Gender = vm.Gender;
+                _staff.Address = vm.Address;
+                _staff.DoB = vm.DoB;
+                _staff.PhoneNumber = vm.PhoneNumber;
+
                 if (image != null)
                 {
                     _staff.AvatarURL = Util.UploadImage(image, "Staff");
                 }
 
-                _context.Update(_staff);
-                _context.SaveChanges();
-
-                return true;
+                var result = await _userManager.UpdateAsync(_staff);
+                if (result.Succeeded)
+                {
+                    return true;
+                }
             }
             return false;
         }
 
-        public Staff GetStaffById(string staffId)
+        public User GetStaffById(string staffId)
         {
-            return _context.Staff.SingleOrDefault(s => s.StaffId.Equals(staffId));
+            return _context.Users.Where(s => s.IsStaff == true)
+                .SingleOrDefault(s => s.UserName.Equals(staffId));
         }
 
-        public bool DeleteStaff(string staffId)
+        public async Task<bool> DeleteStaff(string staffId)
         {
-            var staff = _context.Staff.SingleOrDefault(s => s.StaffId.Equals(staffId));
+            var staff = _context.Users.Where(s => s.IsStaff == true)
+                .SingleOrDefault(s => s.Id.Equals(staffId));
 
-            if(staff != null)
+            if (staff != null)
             {
-                _context.Remove(staff);
-                _context.SaveChanges();
+                var result = await _userManager.DeleteAsync(staff);
 
-                return true;
+                if (result.Succeeded)
+                {
+                    return true;
+                }
             }
             return false;
         }
@@ -884,7 +873,7 @@ namespace ITProductECommerce.Services.Repositories
                 IsActive = discount.IsActive
             };
 
-            if(image != null)
+            if (image != null)
             {
                 _discount.BannerImg = Util.UploadImage(image, "Discounts");
             }
@@ -897,7 +886,7 @@ namespace ITProductECommerce.Services.Repositories
         {
             var _discount = _context.DiscountPrograms.SingleOrDefault(d => d.DiscountId == discount.DiscountId);
 
-            if(_discount != null)
+            if (_discount != null)
             {
                 _discount.Title = discount.Title;
                 _discount.Content = discount.Content;
@@ -906,7 +895,7 @@ namespace ITProductECommerce.Services.Repositories
                 _discount.CouponCode = discount.CouponCode;
                 _discount.DiscountPercent = discount.DiscountPercent;
                 _discount.IsActive = discount.IsActive;
-                if(image != null)
+                if (image != null)
                 {
                     _discount.BannerImg = Util.UploadImage(image, "Discounts");
                 }
@@ -946,7 +935,7 @@ namespace ITProductECommerce.Services.Repositories
         {
             var discount = _context.DiscountPrograms.SingleOrDefault(d => d.DiscountId == discountId);
 
-            if(discount != null)
+            if (discount != null)
             {
                 _context.Remove(discount);
                 _context.SaveChanges();

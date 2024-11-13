@@ -26,22 +26,22 @@
             <div class="col-md-12 col-lg-6 col-xl-7">
                 <div class="row">
                     <div class="col-md-12 col-lg-6">
-                        <div class="form-item w-100">
-                            <a asp-controller="AdminPanel" asp-action="ProductPanel">Product Management</a>
+                        <div class="form-item w-100 mb-3">
+                            <a asp-controller="AdminPanel" asp-action="ProductPanel" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Product Management</a>
                         </div>
-                        <div class="form-item w-100">
-                            <a asp-controller="AdminPanel" asp-action="CategoryPanel">Category Management</a>
+                        <div class="form-item w-100 mb-3">
+                            <a asp-controller="AdminPanel" asp-action="CategoryPanel" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Category Management</a>
                         </div>
-                        <div class="form-item w-100">
-                            <a asp-controller="AdminPanel" asp-action="OrderPanel">Order Management</a>
+                        <div class="form-item w-100 mb-3">
+                            <a asp-controller="AdminPanel" asp-action="OrderPanel" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Order Management</a>
                         </div>
-                        <div class="form-item w-100">
-                            <a asp-controller="AdminPanel" asp-action="DiscountPanel">Discount Management</a>
+                        <div class="form-item w-100 mb-3">
+                            <a asp-controller="AdminPanel" asp-action="DiscountPanel" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Discount Management</a>
                         </div>
-                        @if (User.IsInRole("Admin"))
+                        @if (User.IsInRole("admin"))
                         {
-                            <div class="form-item w-100">
-                                <a asp-controller="AdminPanel" asp-action="StaffPanel">Staff Management</a>
+                            <div class="form-item w-100 mb-3">
+                                <a asp-controller="AdminPanel" asp-action="StaffPanel" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Staff Management</a>
                             </div>
                         }
                     </div>

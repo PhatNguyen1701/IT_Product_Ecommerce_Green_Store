@@ -15,14 +15,13 @@ namespace ITProductECommerce.Configurations
                 .IsRequired();
 
             builder.Property(a => a.StaffId)
-                .IsRequired()
-                .HasColumnType("nvarchar(50)");
+                .IsRequired();
 
             builder.Property(a => a.DepartmentId)
                 .IsRequired()
                 .HasColumnType("varchar(7)");
 
-            builder.HasOne(s => s.Staff)
+            builder.HasOne(s => s.User)
                 .WithMany(a => a.Assignments)
                 .HasForeignKey(a => a.StaffId)
                 .OnDelete(DeleteBehavior.Restrict);

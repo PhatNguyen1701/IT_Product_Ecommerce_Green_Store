@@ -66,7 +66,7 @@
                                 }
                                 else
                                 {
-                                    <p class="mb-0 mt-4">Deleted</p>
+                                    <p class="mb-0 mt-4">N/A</p>
                                 }
                             </td>
                             <td>
@@ -76,13 +76,17 @@
                                         <i class="fa fa-solid fa-arrow-right fa-xs" style="color: #0027eb;"></i>
                                     </a>
                                 }
-                                else if (item.StatusId == 4)
+                                else if (item.StatusId == 2)
                                 {
-                                    <p class="mb-0 mt-4 text-danger">Canceled</p>
+                                    <p class="mb-0 mt-4" style="color: #0027eb;">Shipping</p>
                                 }
                                 else if (item.StatusId == 3)
                                 {
                                     <p class="mb-0 mt-4" style="color: #00fa2a;">Completed</p>
+                                }
+                                else if (item.StatusId == 4)
+                                {
+                                    <p class="mb-0 mt-4 text-danger">Canceled</p>
                                 }
                             </td>
                         </tr>

@@ -1,10 +1,12 @@
 ﻿using ITProductECommerce.Configurations;
 using ITProductECommerce.Helpers;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace ITProductECommerce.Data
 {
-    public class ITProductCommerceContext : DbContext
+    public class ITProductCommerceContext : IdentityDbContext<User, Role, string>
     {
         public ITProductCommerceContext(DbContextOptions<ITProductCommerceContext> options)
             : base(options)
@@ -14,14 +16,12 @@ namespace ITProductECommerce.Data
 
         public DbSet<Assignment> Assignments { get; set; }
         public DbSet<Category> Categories { get; set; }
-        public DbSet<Customer> Customers { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderDetail> OrderDetails { get; set; }
         public DbSet<Product> Products { get; set; }
         public DbSet<Provider> Providers { get; set; }
         public DbSet<Role> Roles { get; set; }
-        public DbSet<Staff> Staff { get; set; }
         public DbSet<Status> Statuses { get; set; }
         public DbSet<Web> Webs { get; set; }
         public DbSet<MainComment> MainComments { get; set; }
@@ -30,16 +30,15 @@ namespace ITProductECommerce.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            base.OnModelCreating(modelBuilder);
             modelBuilder.ApplyConfiguration(new AssignmentConfiguration());
             modelBuilder.ApplyConfiguration(new CategoryConfiguration());
-            modelBuilder.ApplyConfiguration(new CustomerConfiguration());
             modelBuilder.ApplyConfiguration(new DepartmentConfiguration());
             modelBuilder.ApplyConfiguration(new OrderConfiguration());
             modelBuilder.ApplyConfiguration(new OrderDetailConfiguration());
             modelBuilder.ApplyConfiguration(new ProductConfiguration());
             modelBuilder.ApplyConfiguration(new ProviderConfiguration());
             modelBuilder.ApplyConfiguration(new RoleConfiguration());
-            modelBuilder.ApplyConfiguration(new StaffConfiguration());
             modelBuilder.ApplyConfiguration(new StatusConfiguration());
             modelBuilder.ApplyConfiguration(new WebConfiguration());
             modelBuilder.ApplyConfiguration(new MainCommentConfiguration());

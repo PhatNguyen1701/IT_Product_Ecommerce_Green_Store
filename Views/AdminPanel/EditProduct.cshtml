@@ -102,13 +102,19 @@
                 <div class="col-md-12 col-lg-6 col-xl-5">
                     <label class="form-label my-3">Product Picture</label>
                     <div id="edit-container">
-                        <img id="profileImage" src="~/static/edit-image-default-img.png" />
+                        @if (Model.ProductId == 0)
+                        {
+                            <img id="profileImage" src="~/static/edit-image-default-img.png" />
+                        }
+                        else
+                        {
+                            <img id="profileImage" src="~/img/Products/@Model.ImageURL" />
+                        }
                     </div>
                     <input class="pt-3" id="imageUpload" type="file" name="Image" />
-                    <input type="file" name="CurrentImage" style="display:none;" />
                 </div>
                 <div class="row g-4 text-center align-items-center justify-content-center pt-4">
-                    <button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-50 text-primary">Summit</button>
+                    <button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-50 text-primary">Submit</button>
                     @if (ViewBag.Message != null)
                     {
                         <script type="text/javascript">

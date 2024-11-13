@@ -21,14 +21,14 @@ namespace ITProductECommerce.Controllers
             _context = context;
         }
 
-        [Authorize(Roles = "Admin,Staff")]
+        [Authorize(Roles = "admin,staff")]
         public IActionResult Index()
         {
             return View();
         }
 
         #region Product
-        [Authorize(Roles = "Admin,Staff")]
+        [Authorize(Roles = "admin,staff")]
         public IActionResult ProductPanel(int categoryId, string? search, int pageNumber, string? sortBy, int rangeInput, string? providerId)
         {
             if (pageNumber < 1)
@@ -61,7 +61,8 @@ namespace ITProductECommerce.Controllers
         //        return View();
         //    }
         //}
-        [Authorize(Roles = "Admin,Staff")]
+
+        [Authorize(Roles = "admin,staff")]
         [HttpGet]
         public IActionResult EditProduct(int? productId)
         {
@@ -70,7 +71,8 @@ namespace ITProductECommerce.Controllers
 
             if (productId == null)
             {
-                return View(new ProductVM{
+                return View(new ProductVM
+                {
                     Categories = categories,
                     Providers = providers
                 });
@@ -100,19 +102,19 @@ namespace ITProductECommerce.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin,Staff")]
+        [Authorize(Roles = "admin,staff")]
         [HttpPost]
-        public IActionResult EditProduct(ProductVM vm, IFormFile image, IFormFile currentImage)
+        public IActionResult EditProduct(ProductVM vm, IFormFile image)
         {
             if (vm.ProductId == 0)
             {
-                _repository.AddProduct(vm, image, currentImage);
+                _repository.AddProduct(vm, image);
                 ViewBag.Message = "Create Product Successfully!";
                 return RedirectToAction("ProductPanel", "AdminPanel");
             }
             else
             {
-                var data = _repository.UpdateProduct(vm, image, currentImage);
+                var data = _repository.UpdateProduct(vm, image);
                 if (data == false)
                 {
                     TempData["Message"] = $"This {vm.ProductName} name was not found!";
@@ -127,7 +129,7 @@ namespace ITProductECommerce.Controllers
 
         }
 
-        [Authorize(Roles = "Admin,Staff")]
+        [Authorize(Roles = "admin,staff")]
         public IActionResult DeleteProduct(int productId)
         {
             var data = _repository.DeleteProduct(productId);
@@ -147,7 +149,7 @@ namespace ITProductECommerce.Controllers
 
         #region Category
 
-        [Authorize(Roles = "Admin,Staff")]
+        [Authorize(Roles = "admin,staff")]
         public IActionResult CategoryPanel(string? search, int pageNumber)
         {
             if (pageNumber < 1)
@@ -160,7 +162,7 @@ namespace ITProductECommerce.Controllers
             return View(data);
         }
 
-        [Authorize(Roles = "Admin,Staff")]
+        [Authorize(Roles = "admin,staff")]
         [HttpGet]
         public IActionResult EditCategory(int? categoryId)
         {
@@ -182,7 +184,7 @@ namespace ITProductECommerce.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin,Staff")]
+        [Authorize(Roles = "admin,staff")]
         [HttpPost]
         public IActionResult EditCategory(CategoryVM categoryVM, IFormFile image)
         {
@@ -208,7 +210,7 @@ namespace ITProductECommerce.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin,Staff")]
+        [Authorize(Roles = "admin,staff")]
         public IActionResult DeleteCategory(int categoryId)
         {
             var data = _repository.DeleteCategory(categoryId);
@@ -227,7 +229,7 @@ namespace ITProductECommerce.Controllers
 
         #region Order Management
 
-        [Authorize(Roles = "Admin,Staff")]
+        [Authorize(Roles = "admin,staff")]
         public IActionResult OrderPanel(string? search, int pageNumber, string? sortBy)
         {
             if (pageNumber < 1)
@@ -240,16 +242,17 @@ namespace ITProductECommerce.Controllers
             return View(data);
         }
 
-        [Authorize(Roles = "Admin,Staff")]
+        [Authorize(Roles = "admin,staff")]
         [HttpGet]
         public IActionResult UpdateOrderDetail(int orderId)
         {
             var data = _repository.GetOrderById(orderId);
-            var staffId = HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var staffId = HttpContext.User.FindFirstValue(ClaimTypes.Name);
             var statuses = _repository.GetAllStatus();
-            
+
             return View(new OrderDetailVM
             {
+                OrderId = data.OrderId,
                 ReceiverName = data.ReceiverName,
                 Address = data.Address,
                 PhoneNumber = data.PhoneNumber,
@@ -262,7 +265,7 @@ namespace ITProductECommerce.Controllers
             });
         }
 
-        [Authorize(Roles = "Admin,Staff")]
+        [Authorize(Roles = "admin,staff")]
         [HttpPost]
         public IActionResult UpdateOrderDetail(OrderDetailVM vm)
         {
@@ -279,7 +282,7 @@ namespace ITProductECommerce.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin,Staff")]
+        [Authorize(Roles = "admin,staff")]
         public IActionResult CreateOrderPdf(int orderId)
         {
             var data = _repository.GetOrderById(orderId);
@@ -300,10 +303,10 @@ namespace ITProductECommerce.Controllers
 
         #region Staff Management
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         public IActionResult StaffPanel(string? search, int pageNumber)
         {
-            if(pageNumber < 1)
+            if (pageNumber < 1)
             {
                 return RedirectToAction("StaffPanel", new { pageNumber = 1 });
             }
@@ -313,12 +316,12 @@ namespace ITProductECommerce.Controllers
             return View(data);
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpGet]
         public IActionResult EditStaff(string? staffId)
         {
 
-            if(staffId == null)
+            if (staffId == null)
             {
                 return View(new StaffViewModel());
             }
@@ -328,10 +331,10 @@ namespace ITProductECommerce.Controllers
 
                 return View(new StaffViewModel
                 {
-                    StaffId = data.StaffId,
-                    StaffName = data.StaffName,
+                    StaffId = data.UserName,
+                    FirstName = data.FirstName,
+                    LastName = data.LastName,
                     Email = data.Email,
-                    Password = data.Password,
                     Avatar = data.AvatarURL,
                     Gender = data.Gender,
                     Address = data.Address,
@@ -341,13 +344,13 @@ namespace ITProductECommerce.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "admin")]
         [HttpPost]
-        public IActionResult EditStaff(StaffViewModel vm, IFormFile image)
+        public async Task<IActionResult> EditStaff(StaffViewModel vm, IFormFile image)
         {
-            if(_context.Staff.SingleOrDefault(s => s.StaffId.Equals(vm.StaffId)) != null)
+            if (_repository.GetStaffById(vm.StaffId) != null)
             {
-                var data = _repository.UpdateStaff(vm, image);
+                bool data = await _repository.UpdateStaff(vm, image);
                 if (data == true)
                 {
                     ViewBag.Message = "Update Staff successfully!";
@@ -355,22 +358,31 @@ namespace ITProductECommerce.Controllers
                 }
                 else
                 {
-                    return RedirectToAction("StaffPanel", "AdminPanel");
+                    ViewBag.Message = "Error, Update Staff Failed!";
+                    return View(vm);
                 }
             }
             else
             {
-                _repository.AddStaff(vm, image);
-                ViewBag.Message = "Add Staff successfully!";
-                return RedirectToAction("StaffPanel", "AdminPanel");
+                bool data = await _repository.AddStaff(vm, image);
+                if (data == true)
+                {
+                    ViewBag.Message = "Add Staff successfully!";
+                    return RedirectToAction("StaffPanel", "AdminPanel");
+                }
+                else
+                {
+                    ViewBag.Message = " Error, Add Staff Failed!";
+                    return View(vm);
+                }
             }
         }
 
-        [Authorize(Roles = "Admin")]
-        public IActionResult RemoveStaff(string staffId)
+        [Authorize(Roles = "admin")]
+        public async Task<IActionResult> RemoveStaff(string staffId)
         {
-            var data = _repository.DeleteStaff(staffId);
-            if(data == true)
+            bool data = await _repository.DeleteStaff(staffId);
+            if (data == true)
             {
                 ViewBag.Message = "Delete staff succesfully!";
                 return RedirectToAction("StaffPanel", "AdminPanel");
@@ -386,10 +398,10 @@ namespace ITProductECommerce.Controllers
 
         #region Discount management
 
-        [Authorize(Roles = "Admin, Staff")]
+        [Authorize(Roles = "admin, staff")]
         public IActionResult DiscountPanel(string? search, int pageNumber)
         {
-            if(pageNumber < 1)
+            if (pageNumber < 1)
             {
                 return RedirectToAction("DiscountPanel", new { pageNumber = 1 });
             }
@@ -399,11 +411,11 @@ namespace ITProductECommerce.Controllers
             return View(data);
         }
 
-        [Authorize(Roles ="Admin, Staff")]
+        [Authorize(Roles = "admin, staff")]
         [HttpGet]
         public IActionResult EditDiscount(int? discountId)
         {
-            if(discountId == null)
+            if (discountId == null)
             {
                 return View(new DiscountProgramVM());
             }
@@ -426,11 +438,11 @@ namespace ITProductECommerce.Controllers
             }
         }
 
-        [Authorize(Roles = "Admin, Staff")]
+        [Authorize(Roles = "admin, staff")]
         [HttpPost]
         public IActionResult EditDiscount(DiscountProgramVM discount, IFormFile image)
         {
-            if(discount.DiscountId == 0)
+            if (discount.DiscountId == 0)
             {
                 _repository.AddDiscount(discount, image);
                 ViewBag.Message = "Added Discount Succesfully!";
@@ -439,7 +451,7 @@ namespace ITProductECommerce.Controllers
             else
             {
                 var data = _repository.UpdateDiscount(discount, image);
-                if(data == true)
+                if (data == true)
                 {
                     ViewBag.Message = "Updated Discount Successfully!";
                     return RedirectToAction("DiscountPanel", "AdminPanel");

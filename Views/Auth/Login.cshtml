@@ -16,7 +16,7 @@
 
 <div class="container-fluid py-5">
     <div class="container py-5">
-        <h1 class="mb-4">Login</h1>
+        <h1 class="mb-4">Welcome back!</h1>
         <form asp-action="Login" asp-route-returnurl="@ViewBag.ReturnURL">
             <div class="text-danger" asp-validation-summary="All"></div>
             <div class="row g-5">
@@ -40,9 +40,19 @@
                     </div>
                     <div class="row g-4 text-center align-items-center justify-content-center pt-4">
                         <button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Login</button>
-                        <p>Not have an account yet? <a asp-controller="Auth" asp-action="Register">Register now!</a></p>
-                        <a asp-controller="Auth" asp-action="ForgetPassword" class="btn border-danger">Forget Password?</a>
-                        <a asp-controller="Auth" asp-action="StaffLogin" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Login as staff</a>
+                        <div class="d-flex justify-content-between pt-3">
+                            <div class="form-item">
+                                <input asp-for="@Model.RememberMe" type="checkbox" class="form-check-input" id="RememberMe" name="RememberMe">
+                                <label class="form-check-label" for="RememberMe">Remember me</label>
+                            </div>
+                            <p>Not have an account yet? <a asp-controller="Auth" asp-action="Register">Register now!</a></p>
+                        </div>
+                        <a asp-controller="Auth" asp-action="ForgotPassword" class="btn border-danger">Forget Password?</a>
+                    </div>
+                </div>
+                <div class="col-md-12 col-lg-6 col-xl-5">
+                    <div id="edit-container">
+                        <img src="~/static/login-banner-img.jpg" />
                     </div>
                 </div>
             </div>
@@ -62,6 +72,14 @@
                 input.attr("type", "password");
             }
         });
+
+        var chat = localStorage.getItem("chatVisible");
+        if (chat == "True") {
+            $(".chat-popup").show();
+        }
+        else {
+            $(".chat-popup").hide();
+        }
     </script>
 }
 

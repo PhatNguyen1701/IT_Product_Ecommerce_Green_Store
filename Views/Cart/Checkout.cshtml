@@ -23,8 +23,8 @@
             <div class="row g-5">
                 <div class="col-md-12 col-lg-6 col-xl-7">
                     <div class="form-check my-3">
-                        <input type="checkbox" class="form-check-input" id="IsCustomer" name="IsCustomer" value="false">
-                        <label class="form-check-label" for="IsCustomer">Use your profile info?</label>
+                        <input type="checkbox" class="form-check-input" id="IsUser" name="IsUser" value="false">
+                        <label class="form-check-label" for="IsUser">Use your profile info?</label>
                     </div>
                     <div class="form-item delivery-info">
                         <label class="form-label my-3">Receiver's Name'<sup>*</sup></label>
@@ -167,7 +167,7 @@
 @section Scripts{
     <script>
         $(document).ready(function () {
-            $("#IsCustomer").change(function () {
+            $("#IsUser").change(function () {
                 if ($(this).prop("checked")) {
                     $(this).val(true);
                     $(".delivery-info").addClass("d-none");
@@ -178,5 +178,13 @@
                 }
             });
         });
+
+        var chat = localStorage.getItem("chatVisible");
+        if (chat == "True") {
+            $(".chat-popup").show();
+        }
+        else {
+            $(".chat-popup").hide();
+        }
     </script>
 }

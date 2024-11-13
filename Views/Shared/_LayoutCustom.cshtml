@@ -71,7 +71,7 @@
                                 </div>
                             </div>
                             <a asp-controller="Home" asp-action="Contact" class="nav-item nav-link">Contact</a>
-                            @if (User.IsInRole("Admin") || User.IsInRole("Staff"))
+                            @if (User.IsInRole("admin") || User.IsInRole("staff"))
                             {
                                 <a asp-controller="AdminPanel" asp-action="Index" class="nav-item nav-link">Admin Panel</a>
                             }
@@ -90,7 +90,7 @@
                                     <i class="fas fa-user fa-2x"></i>
                                 </a>
                             }
-                            else if (User.IsInRole("Staff") || User.IsInRole("Admin"))
+                            else if (User.IsInRole("staff") || User.IsInRole("admin"))
                             {
                                 <a asp-controller="Auth" asp-action="Logout" title="Logout" class="my-auto p">
                                     <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#7ed321" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3H6a2 2 0 0 0-2 2v14c0 1.1.9 2 2 2h4M16 17l5-5-5-5M19.8 12H9" /></svg>
@@ -98,7 +98,7 @@
                             }
                             else
                             {
-                                <a asp-controller="Auth" asp-action="UserProfile" asp-route-customerName="@User.Identity.Name" title="User profile" class="my-auto">
+                                <a asp-controller="Auth" asp-action="UserProfile" asp-route-username="@User.Identity.Name" title="User profile" class="my-auto">
                                     <i class="fas fa-user fa-2x"></i>
                                 </a>
                                 <a style="padding-left: 1.3rem;" asp-controller="Auth" asp-action="Logout" title="Logout" class="my-auto">
@@ -136,13 +136,44 @@
 
         @await Html.PartialAsync("_Footer")
     </div>
+
     <!-- Back to Top -->
     <a href="#" class="btn btn-primary border-3 border-primary rounded-circle back-to-top"><i class="fa fa-arrow-up"></i></a>
 
+    <!-- Chatbox -->
+    <button onclick="openForm()" class="btn btn-primary border-3 border-primary rounded-circle chat-icon"><i class="bi bi-chat-dots"></i></button>
+
+    <!-- Chatbox Start -->
+
+    <div class="chat-popup" id="myForm">
+        <div class="form-container">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <input type="hidden" id="username" value="@User.Identity.Name" />
+            }
+            else
+            {
+                <input type="hidden" id="username" value="Anonymous" />
+            }
+
+            <h3 class="text-primary">Customer Support</h3>
+
+            <label for="msg"><b>Message</b></label>
+            <textarea id="message" placeholder="Type message.." name="msg"></textarea>
+            <div id="chatBox" class="overflow-auto mb-2" style="height: 100px;"></div>
+            <div class="d-flex">
+                <button type="submit" id="sendButton" class="btn border-secondary text-uppercase py-2 px-2 w-50 m-1 text-primary">Send</button>
+                <button type="button" class="btn border-secondary text-uppercase py-2 px-2 w-50 m-1 cancel" onclick="closeForm()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbox End -->
 
     <!-- JavaScript Libraries -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/5.0.13/signalr.min.js"></script>
     <script src="~/lib/easing/easing.min.js"></script>
     <script src="~/lib/waypoints/waypoints.min.js"></script>
     <script src="~/lib/lightbox/js/lightbox.min.js"></script>
@@ -171,6 +202,41 @@
                 }
             });
         });
+    </script>
+
+    <script>
+        var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+        connection.on("ReceiveMessage", function (user, message) {
+            var encodedUser = $("<div />").text(user).html();
+            var encodedMsg = $("<div />").text(message).html();
+            $("#chatBox").append("<p><strong>" + encodedUser + "</strong>: " + encodedMsg + "</p>");
+        });
+
+        $("#sendButton").click(function () {
+            var user = $("#username").val();
+            var message = $("#message").val();
+            connection.invoke("SendMessage", user, message);
+            $("#message").val("").focus();
+        });
+
+        connection.start().then(function () {
+            console.log("Connected!");
+        }).catch(function (err) {
+            console.error(err.toString());
+        });
+
+        function openForm() {
+            localStorage.setItem("chatVisible", "True");
+            document.getElementById("myForm").style.display = "block";
+            $(".chat-icon").addClass("d-none");
+        }
+
+        function closeForm() {
+            localStorage.setItem("chatVisible", "False");
+            document.getElementById("myForm").style.display = "none";
+            $(".chat-icon").removeClass("d-none");
+        }
     </script>
 </body>
 </html>

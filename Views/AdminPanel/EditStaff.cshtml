@@ -23,18 +23,11 @@
             <div class="row g-5">
                 <div class="col-md-12 col-lg-6 col-xl-7">
                     <div class="row">
-                        <div class="col-md-12 col-lg-6">
+                        <div class="form-item">
                             <div class="form-item w-100">
                                 <label class="form-label my-3">User Name</label><sup>*</sup>
                                 <input asp-for="@Model.StaffId" type="text" class="form-control">
                                 <span asp-validation-for="@Model.StaffId" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-md-12 col-lg-6">
-                            <div class="form-item w-100">
-                                <label class="form-label my-3">Staff Name</label><sup>*</sup>
-                                <input asp-for="@Model.StaffName" type="text" class="form-control">
-                                <span asp-validation-for="@Model.StaffName" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-md-12 col-lg-6">
@@ -49,6 +42,20 @@
                                 <label class="form-label my-3">Comfirm Password</label><sup>*</sup>
                                 <input asp-for="@Model.ConfirmPassword" type="password" class="form-control">
                                 <span asp-validation-for="@Model.ConfirmPassword" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-6">
+                            <div class="form-item w-100">
+                                <label class="form-label my-3">First Name</label><sup>*</sup>
+                                <input asp-for="@Model.FirstName" type="text" class="form-control">
+                                <span asp-validation-for="@Model.FirstName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-md-12 col-lg-6">
+                            <div class="form-item w-100">
+                                <label class="form-label my-3">Last Name</label><sup>*</sup>
+                                <input asp-for="@Model.LastName" type="text" class="form-control">
+                                <span asp-validation-for="@Model.LastName" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="form-item">
@@ -91,12 +98,19 @@
                 <div class="col-md-12 col-lg-6 col-xl-5">
                     <label class="form-label my-3">Profile Picture</label>
                     <div id="profile-container">
-                        <img id="profileImage" src="~/static/default-user-avatar.jpg" />
+                        @if (Model.StaffId == null)
+                        {
+                            <img id="profileImage" src="~/static/default-user-avatar.jpg" />
+                        }
+                        else
+                        {
+                            <img id="profileImage" src="~/img/Staff/@Model.Avatar" />
+                        }
                     </div>
                     <input class="pt-3" id="imageUpload" type="file" name="Image" placeholder="Avatar" required="" capture />
                 </div>
                 <div class="row g-4 text-center align-items-center justify-content-center pt-4">
-                    <button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-50 text-primary">Add Staff</button>
+                    <button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-50 text-primary">Submit</button>
                     @if (ViewBag.Message != null)
                     {
                         <script type="text/javascript">

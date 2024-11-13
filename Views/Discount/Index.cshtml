@@ -60,7 +60,7 @@
                                     <span class="discount-title">
                                         @item.Title
                                     </span>
-                                    <img src="~/img/Discounts/@item.BannerImg"/>
+                                    <img src="~/img/Discounts/@item.BannerImg" />
                                 </a>
                             }
 
@@ -73,3 +73,15 @@
     </div>
 </div>
 <!-- Fruits Shop End-->
+
+@section Scripts{
+    <script>
+        var chat = localStorage.getItem("chatVisible");
+        if (chat == "True") {
+            $(".chat-popup").show();
+        }
+        else {
+            $(".chat-popup").hide();
+        }
+    </script>
+}

@@ -13,9 +13,9 @@ namespace ITProductECommerce.ViewModels
 
         public DateTime Created { get; set; }
 
-        public string CustomerId { get; set; }
+        public string UserId { get; set; }
 
-        public string CustomerName { get; set; }
+        public string Username { get; set; }
 
         public int Rating { get; set; } = 5;
 

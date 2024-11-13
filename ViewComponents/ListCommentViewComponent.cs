@@ -19,8 +19,8 @@ namespace ITProductECommerce.ViewComponents
                 Rating = mc.Rating,
                 ProductId = mc.ProductId,
                 ProductName = mc.Product.ProductName,
-                ImageURL = mc.Customer.AvatarURL ?? "",
-                CustomerName = mc.Customer.CustomerName,
+                ImageURL = mc.User.AvatarURL ?? "",
+                Username = mc.User.UserName,
             });
 
             return View(data);

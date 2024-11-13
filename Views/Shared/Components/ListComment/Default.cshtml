@@ -13,10 +13,10 @@
                 </div>
                 <div class="d-flex align-items-center flex-nowrap">
                     <div class="bg-secondary rounded">
-                        <img src="~/img/Customers/@item.ImageURL" class="img-fluid rounded" style="width: 100px; height: 100px;" alt="">
+                        <img src="~/img/User/@item.ImageURL" class="img-fluid rounded" style="width: 100px; height: 100px;" alt="">
                     </div>
                     <div class="ms-4 d-block">
-                        <h4 class="text-dark">@item.CustomerName</h4>
+                        <h4 class="text-dark">@item.Username</h4>
                         <a asp-controller="Products" asp-action="Detail" asp-route-id="@item.ProductId"><p class="m-0 pb-3">Rated for @item.ProductName</p></a>
                         <div class="d-flex pe-5">
                             @for (int i = 1; i <= item.Rating; i++)

@@ -12,9 +12,9 @@ namespace ITProductECommerce.Services.Repositories
         ProductVM GetAllProducts(int categoryId, string? search, int pageNumber, string? sortBy, int rangeInput, string? providerId);
         ProductDetailVM GetProductDetail(int productId);
         Product GetProductById(int productId);
-        void AddProduct(ProductVM product, IFormFile image, IFormFile currentImage);
+        void AddProduct(ProductVM product, IFormFile image);
         bool DeleteProduct(int productId);
-        bool UpdateProduct(ProductVM product, IFormFile image, IFormFile currentImage);
+        bool UpdateProduct(ProductVM product, IFormFile image);
         void UpdateProduct(Product product);
         #endregion
 
@@ -27,11 +27,10 @@ namespace ITProductECommerce.Services.Repositories
         #endregion
 
         #region Auth
-        RegisterVM Register(RegisterVM register, IFormFile image);
-        Customer GetUserById(string customerId);
-        bool UpdateUserProfile(UserProfileVM userProfile, IFormFile image);
-        bool DeleteUser(string userId);
-        UserProfileVM GetUserProfile(string customerName);
+        User GetUserById(string customerId);
+        Task<bool> UpdateUserProfile(UserProfileVM userProfile, IFormFile image);
+        Task<bool> DeleteUser(string userId);
+        UserProfileVM GetUserProfile(string username);
         #endregion
 
         #region Category
@@ -61,16 +60,12 @@ namespace ITProductECommerce.Services.Repositories
         bool UpdateOrderDetail(OrderDetailVM orderDetailVM);
         #endregion
 
-        #region Role
-        List<Role> GetAllRole();
-        #endregion
-
         #region Staff Management
         StaffViewModel GetAllStaff(string? search, int pageNumber);
-        void AddStaff(StaffViewModel staff, IFormFile image);
-        bool UpdateStaff(StaffViewModel staff, IFormFile image);
-        Staff GetStaffById(string staffId);
-        bool DeleteStaff(string staffId);
+        Task<bool> AddStaff(StaffViewModel vm, IFormFile image);
+        Task<bool> UpdateStaff(StaffViewModel vm, IFormFile image);
+        User GetStaffById(string staffId);
+        Task<bool> DeleteStaff(string staffId);
         #endregion
 
         #region Discount Program

@@ -6,7 +6,7 @@ namespace ITProductECommerce.ViewModels
     {
         [Display(Name = "Username")]
         [Required(ErrorMessage = "Username is required")]
-        [MaxLength(20, ErrorMessage = "Maximum 20 chars")]
+        [MaxLength(50, ErrorMessage = "Maximum 50 chars")]
         public string Username { get; set; }
 
         [Display(Name = "Password")]
@@ -15,5 +15,6 @@ namespace ITProductECommerce.ViewModels
         public string Password { get; set; }
         public bool IsActive { get; set; } = true;
         public string? Note { get; set; }
+        public bool RememberMe { get; set; }
     }
 }

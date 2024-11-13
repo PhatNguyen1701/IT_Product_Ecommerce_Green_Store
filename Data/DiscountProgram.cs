@@ -12,6 +12,6 @@
         public bool IsActive { get; set; }
         public string BannerImg { get; set; } = "";
 
-        public ICollection<Customer> Customers { get; set; }
+        public ICollection<User> User { get; set; }
     }
 }

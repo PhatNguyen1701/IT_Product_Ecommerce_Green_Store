@@ -1,0 +1,42 @@
+﻿
+@{
+    ViewData["Title"] = "Sending Mail Confirmation";
+}
+
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">Email has been sent!</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Contact">Contact</a></li>
+        <li class="breadcrumb-item active text-white">Email sending confirmation</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
+<!-- Confirm send mail Start -->
+<div class="container-fluid py-5">
+    <div class="container py-5 text-center">
+        <div class="row justify-content-center">
+            <div class="col-lg-6">
+                <i class="bi bi-check-circle-fill display-1 text-primary"></i>
+                <h1 class="display-3">YOUR MESSAGE</h1>
+                <h1 class="mb-4">Sent To Us Successfully!</h1>
+                <p class="mb-4">We have received your mail, thank you for contacting us. We will contact you as soon as possible.</p>
+                <a class="btn border-secondary rounded-pill py-3 px-5" asp-controller="Home" asp-action="Index">Go Back To Home</a>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Confirm send mail End -->
+
+@section Scripts{
+    <script>
+        var chat = localStorage.getItem("chatVisible");
+        if (chat == "True") {
+            $(".chat-popup").show();
+        }
+        else {
+            $(".chat-popup").hide();
+        }
+    </script>
+}

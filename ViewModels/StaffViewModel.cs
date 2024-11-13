@@ -9,9 +9,15 @@ namespace ITProductECommerce.ViewModels
         [MaxLength(20, ErrorMessage = "Maximum 20 chars")]
         public string StaffId { get; set; } = "";
 
-        [Required(ErrorMessage = "Name is required")]
-        [MaxLength(20, ErrorMessage = "Maximum 20 chars")]
-        public string StaffName { get; set; } = "";
+        [Display(Name = "First Name")]
+        [Required(ErrorMessage = "First name is required")]
+        [MaxLength(50, ErrorMessage = "Maximum 50 chars")]
+        public string FirstName { get; set; }
+
+        [Display(Name = "Last Name")]
+        [Required(ErrorMessage = "Last name is required")]
+        [MaxLength(50, ErrorMessage = "Maximum 50 chars")]
+        public string LastName { get; set; }
 
         [EmailAddress(ErrorMessage = "Email format error")]
         public string Email { get; set; } = "";
@@ -33,7 +39,7 @@ namespace ITProductECommerce.ViewModels
         public int PageCount { get; set; }
         public bool NextPage { get; set; }
         public IEnumerable<int> Pages { get; set; }
-        public IEnumerable<Staff> Staffs { get; set; }
+        public IEnumerable<User> Staffs { get; set; }
         public string? Search { get; set; }
     }
 }

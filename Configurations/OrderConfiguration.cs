@@ -14,9 +14,8 @@ namespace ITProductECommerce.Configurations
                 .IsRequired()
                 .ValueGeneratedOnAdd();
 
-            builder.Property(o => o.CustomerId)
-                .IsRequired()
-                .HasColumnType("nvarchar(20)");
+            builder.Property(o => o.UserId)
+                .IsRequired();
 
             builder.Property(o => o.OrderDate)
                 .IsRequired();
@@ -49,26 +48,18 @@ namespace ITProductECommerce.Configurations
             builder.Property(o => o.StatusId)
                 .IsRequired();
 
-            builder.Property(o => o.StaffId)
-                .HasColumnType("nvarchar(50)");
-
             builder.Property(o => o.Note)
-                .HasColumnType("nvarchar(50)");
-
-            builder.HasOne(c => c.Customer)
-                .WithMany(o => o.Orders)
-                .HasForeignKey(o => o.CustomerId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasColumnType("nvarchar(500)");
 
             builder.HasOne(s => s.Status)
                 .WithMany(o => o.Orders)
                 .HasForeignKey(o => o.StatusId)
                 .OnDelete(DeleteBehavior.Restrict);
 
-            builder.HasOne(s => s.Staff)
+            builder.HasOne(s => s.User)
                 .WithMany(o => o.Orders)
-                .HasForeignKey(o => o.StaffId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .HasForeignKey(o => o.UserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

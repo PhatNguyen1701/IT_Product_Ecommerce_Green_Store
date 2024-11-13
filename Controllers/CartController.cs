@@ -68,8 +68,8 @@ namespace ITProductECommerce.Controllers
             {
                 return View("Success");
             }
-
-            return View("Fail");
+            TempData["Message"] = $"Failed to place order in database!";
+            return Redirect("Fail");
         }
     }
 }

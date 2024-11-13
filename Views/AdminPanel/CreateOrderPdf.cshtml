@@ -4,7 +4,18 @@
     ViewData["Title"] = "CreateOrderPdf";
 }
 
-<h1>Green Store - Best Product</h1>
+<!-- Single Page Header start -->
+<div class="container-fluid page-header py-5">
+    <h1 class="text-center text-white display-6">@Model.OrderId Details</h1>
+    <ol class="breadcrumb justify-content-center mb-0">
+        <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-controller="AdminPanel" asp-action="Index">Admin Panel</a></li>
+        <li class="breadcrumb-item"><a asp-controller="AdminPanel" asp-action="OrderPanel">Order Panel</a></li>
+        <li class="breadcrumb-item"><a asp-controller="AdminPanel" asp-action="UpdateOrderDetail" asp-route-orderId="@Model.OrderId">@Model.OrderId Details</a></li>
+        <li class="breadcrumb-item active text-white">Create PDF</li>
+    </ol>
+</div>
+<!-- Single Page Header End -->
 
 <div class="p-5" id="pdforder">
     <img src="~/static/green_store_logo.jpg" style="width: 200px; height: 200px;" />

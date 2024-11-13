@@ -20,7 +20,7 @@
         <h1 class="mb-4">Billing details</h1>
         <form method="post" asp-controller="AdminPanel" asp-action="UpdateOrderDetail">
             <div class="row g-5">
-                <div class="col-md-12 col-lg-6 col-xl-7 id=" pdforder"">
+                <div class="col-md-12 col-lg-6 col-xl-7" id="pdforder">
                     <div class="form-item delivery-info">
                         <label class="form-label my-3">Order ID<sup>*</sup></label>
                         <input asp-for="@Model.OrderId" type="text" name="OrderId" class="form-control" readonly>
