@@ -294,6 +294,11 @@ namespace ITProductECommerce.Services.Repositories
         public List<CartItemVM> Cart => _session.Get<List<CartItemVM>>(AppConst.CART_KEY)
             ?? new List<CartItemVM>();
 
+        public String SumItemFromCart()
+        {
+            return Cart.Sum(c => c.Total).ToString();
+        }
+
         public List<CartItemVM> GetAllCartItem()
         {
             return Cart;
@@ -354,6 +359,7 @@ namespace ITProductECommerce.Services.Repositories
             return Cart;
         }
 
+        //COD Payment
         public bool Checkout(CheckoutVM checkoutVM)
         {
             //var customerId = _httpContextAccessor.HttpContext.User.Claims.SingleOrDefault(c =>
@@ -373,8 +379,64 @@ namespace ITProductECommerce.Services.Repositories
                 PhoneNumber = checkoutVM.PhoneNumber ?? user.PhoneNumber,
                 OrderDate = DateTime.Now,
                 PaymentMethod = "COD",
-                TypeShipping = "GRAB",
+                TypeShipping = "N/A",
                 StatusId = 1,
+                StaffId = "",
+                Note = checkoutVM.Note
+            };
+
+            _context.Database.BeginTransaction();
+            try
+            {
+                _context.Database.CommitTransaction();
+                _context.Add(order);
+                _context.SaveChanges();
+
+                var orderDetail = new List<OrderDetail>();
+                foreach (var item in Cart)
+                {
+                    orderDetail.Add(new OrderDetail
+                    {
+                        OrderId = order.OrderId,
+                        Quantity = item.Quantity,
+                        Price = item.Price,
+                        ProductId = item.ProductId,
+                        Discount = 0
+                    });
+                }
+                _context.AddRange(orderDetail);
+                _context.SaveChanges();
+
+                _session.Set<List<CartItemVM>>(AppConst.CART_KEY, new List<CartItemVM>());
+            }
+            catch
+            {
+                _context.Database.RollbackTransaction();
+            }
+
+            return true;
+        }
+
+        //Paypal Payment
+        public bool PaypalCheckout(CheckoutVM checkoutVM)
+        {
+            var userId = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var user = new User();
+            if (checkoutVM.IsUser)
+            {
+                user = _context.Users.SingleOrDefault(c => c.Id.Equals(userId));
+            }
+
+            var order = new Order
+            {
+                UserId = userId,
+                ReceiverName = checkoutVM.ReceiverName ?? user.UserName,
+                Address = checkoutVM.Address ?? user.Address,
+                PhoneNumber = checkoutVM.PhoneNumber ?? user.PhoneNumber,
+                OrderDate = DateTime.Now,
+                PaymentMethod = "PAYPAL",
+                TypeShipping = "N/A",
+                StatusId = 5,
                 StaffId = "",
                 Note = checkoutVM.Note
             };

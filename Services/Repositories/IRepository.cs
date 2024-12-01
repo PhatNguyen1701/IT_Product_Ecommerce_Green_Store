@@ -24,6 +24,8 @@ namespace ITProductECommerce.Services.Repositories
         bool RemoveFromCart(int productId);
         List<CartItemVM> Checkout();
         bool Checkout(CheckoutVM checkoutVM);
+        bool PaypalCheckout(CheckoutVM checkoutVM);
+        String SumItemFromCart();
         #endregion
 
         #region Auth

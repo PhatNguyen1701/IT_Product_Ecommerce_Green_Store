@@ -2,6 +2,7 @@ using ITProductECommerce.CustomTokenProviders;
 using ITProductECommerce.Data;
 using ITProductECommerce.Helpers;
 using ITProductECommerce.Hubs;
+using ITProductECommerce.Services;
 using ITProductECommerce.Services.EmailServices;
 using ITProductECommerce.Services.Repositories;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -63,12 +64,18 @@ builder.Services.Configure<EmailConfirmationTokenProviderOptions>(options =>
 
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options =>
 {
+    //Configure some options for remember me function
     options.LoginPath = "/Auth/Login";
     options.AccessDeniedPath = "/AccessDenied";
     options.Cookie.HttpOnly = true;
     options.ExpireTimeSpan = TimeSpan.FromDays(30);
     options.SlidingExpiration = true;
 });
+
+//builder.Services.ConfigureApplicationCookie(options =>
+//{
+//    options.LoginPath = "/Auth/Login";
+//});
 
 //Add SignalR for chat
 builder.Services.AddSignalR();
@@ -80,6 +87,13 @@ var emailConfig = builder.Configuration
 builder.Services.AddSingleton(emailConfig);
 
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+
+//Add Singleton for Paypal payment function
+builder.Services.AddSingleton(x => new PaypalClient(
+    builder.Configuration["PaypalOptions:AppId"],
+    builder.Configuration["PaypalOptions:AppSerect"],
+    builder.Configuration["PaypalOptions:Mode"]
+    ));
 
 var app = builder.Build();
 

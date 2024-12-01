@@ -1,18 +1,24 @@
-﻿using ITProductECommerce.Helpers;
+﻿using ITProductECommerce.Data;
+using ITProductECommerce.Helpers;
+using ITProductECommerce.Services;
 using ITProductECommerce.Services.Repositories;
 using ITProductECommerce.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace ITProductECommerce.Controllers
 {
     public class CartController : Controller
     {
         private readonly IRepository _repository;
+        private readonly PaypalClient _paypalClient;
 
-        public CartController(IRepository repository)
+        public CartController(IRepository repository, PaypalClient paypalClient)
         {
             _repository = repository;
+            _paypalClient = paypalClient;
         }
 
         public IActionResult Index()
@@ -47,6 +53,18 @@ namespace ITProductECommerce.Controllers
         }
 
         [Authorize]
+        public IActionResult PaymentSuccess()
+        {
+            return View("Success");
+        }
+
+        [Authorize]
+        public IActionResult PaymentFailed()
+        {
+            return View("Fail");
+        }
+
+        [Authorize]
         [HttpGet]
         public IActionResult Checkout()
         {
@@ -56,8 +74,12 @@ namespace ITProductECommerce.Controllers
                 return Redirect("/");
             }
 
+            ViewBag.PaypalClientId = _paypalClient.ClientId;
+
             return View(data);
         }
+
+        #region COD Payment
 
         [Authorize]
         [HttpPost]
@@ -71,5 +93,56 @@ namespace ITProductECommerce.Controllers
             TempData["Message"] = $"Failed to place order in database!";
             return Redirect("Fail");
         }
+
+        #endregion
+
+        #region Paypal payment
+
+        [Authorize]
+        [HttpPost("/Cart/create-paypal-order")]
+        public async Task<IActionResult> CreatePaypalOrder(CancellationToken cancellationToken)
+        {
+            //Create order information to send to paypal
+            var total = _repository.SumItemFromCart();
+            var currency = "USD";
+            var referenceOrderId = "OrderID" + DateTime.Now.Ticks.ToString();
+
+            try
+            {
+                var response = await _paypalClient.CreateOrder(total, currency, referenceOrderId);
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                var error = new { ex.GetBaseException().Message };
+                return BadRequest(error);
+            }
+        }
+
+        [Authorize]
+        [HttpPost("/Cart/capture-paypal-order")]
+        public async Task<IActionResult> CapturePaypalOrder(CheckoutVM checkoutVM ,string orderId, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var response = await _paypalClient.CaptureOrder(orderId);
+
+                //Save the order to database when successful
+                var data = _repository.PaypalCheckout(checkoutVM);
+                if(data == false)
+                {
+                    return RedirectToAction("PaymentFailed", "Cart");
+                }
+
+                return Ok(response);
+            }
+            catch(Exception ex)
+            {
+                var error = new { ex.GetBaseException().Message };
+                return BadRequest(error);
+            }
+        }
+
+        #endregion
     }
 }

@@ -14,7 +14,6 @@
     </ol>
 </div>
 <!-- Single Page Header End -->
-
 <!-- Checkout Page Start -->
 <div class="container-fluid py-5">
     <div class="container py-5">
@@ -122,41 +121,26 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
+                    <div class="row g-4 text-center align-items-center justify-content-center py-3">
                         <div class="col-12">
-                            <div class="form-check text-start my-3">
-                                <input type="checkbox" class="form-check-input bg-primary border-0" id="Transfer-1" name="Transfer" value="Transfer">
-                                <label class="form-check-label" for="Transfer-1">Direct Bank Transfer</label>
-                            </div>
-                            <p class="text-start text-dark">Make your payment directly into our bank account. Please use your Order ID as the payment reference. Your order will not be shipped until the funds have cleared in our account.</p>
+                            <p class="text-start text-dark">Choose to pay directly upon receipt from our partners or shipping services!</p>
                         </div>
                     </div>
-                    <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
-                        <div class="col-12">
-                            <div class="form-check text-start my-3">
-                                <input type="checkbox" class="form-check-input bg-primary border-0" id="Payments-1" name="Payments" value="Payments">
-                                <label class="form-check-label" for="Payments-1">Check Payments</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
-                        <div class="col-12">
-                            <div class="form-check text-start my-3">
-                                <input type="checkbox" class="form-check-input bg-primary border-0" id="Delivery-1" name="Delivery" value="Delivery" checked>
-                                <label class="form-check-label" for="Delivery-1">Cash On Delivery</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row g-4 text-center align-items-center justify-content-center border-bottom py-3">
-                        <div class="col-12">
-                            <div class="form-check text-start my-3">
-                                <input type="checkbox" class="form-check-input bg-primary border-0" id="Paypal-1" name="Paypal" value="Paypal">
-                                <label class="form-check-label" for="Paypal-1">Paypal</label>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row g-4 text-center align-items-center justify-content-center pt-4">
+                    <div class="row g-4 text-center align-items-center justify-content-center pt-1">
                         <button type="submit" class="btn border-secondary py-3 px-4 text-uppercase w-100 text-primary">Place Order</button>
+                    </div>
+                    <div class="row g-4 text-center align-items-center justify-content-center py-3">
+                        <div class="col-12">
+                            <p class="text-start text-dark text-center">OR</p>
+                        </div>
+                    </div>
+                    <div class="row g-4 text-center align-items-center justify-content-center py-3">
+                        <div class="col-12">
+                            <p class="text-start text-dark">Make your payment easily with online payment method, please choice one of services below!</p>
+                        </div>
+                    </div>
+                    <div class="row g-4 text-center align-items-center justify-content-center pt-1">
+                        <div id="paypal-button-container" onclick="javascript: this.form.submit();"></div>
                     </div>
                 </div>
             </div>
@@ -165,6 +149,9 @@
 </div>
 <!-- Checkout Page End -->
 @section Scripts{
+    @*Paypal script for import components*@
+    <script src="https://sandbox.paypal.com/sdk/js?client-id=@ViewBag.PaypalClientId"></script>
+
     <script>
         $(document).ready(function () {
             $("#IsUser").change(function () {
@@ -186,5 +173,45 @@
         else {
             $(".chat-popup").hide();
         }
+
+        //Paypal script for css and javascript on create and approve
+        paypal.Buttons({
+            style: {
+                layout: 'vertical',
+                color: 'gold',
+                shape: 'rect',
+                label: 'paypal'
+            },
+
+            createOrder: (data, actions) => {
+                return fetch("/Cart/create-paypal-order", {
+                    method: "post",
+                }).then((response) => {
+                    if (!response.ok) {
+                        return response.json().then((error) => { throw error; });
+                    }
+
+                    return response.json();
+                }).then((order) => order.id)
+                    .catch(error => alert(error.message));
+            },
+
+            onApprove: (data, actions) => {
+                // Capture the funds from the transaction.
+                return fetch(`/Cart/capture-paypal-order?orderId=${data.orderID}`, {
+                    method: "post",
+                }).then((response) => {
+                    if (!response.ok) {
+                        return response.json().then((err) => { throw error });
+                        window.location.href = "/Cart/PaymentFailed";
+                    }
+
+                    //Redirect to successful action when success
+                    window.location.href = "/Cart/PaymentSuccess";
+
+                }).catch(error => alert(error.message));
+            }
+        }).render('#paypal-button-container');
+
     </script>
 }
