@@ -1,6 +1,7 @@
 This project using ASP NET Core 8.0, SQL Server, HTML, CSS, Javascript.
   + Three type of user: Admin, Staff and Customer that have specific action.
-  + Product, Categories and Order can be manange by the admin or staff, support COD payment.
+  + Product, Categories and Order can be manange by the admin or staff.
+  + Support COD payment, print and export shipping build pdf.
   + Search, filler by many options.
   + Rating and comment come from Customer to rate a product.
   + Support customer chat box real time.
