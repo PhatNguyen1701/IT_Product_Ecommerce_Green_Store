@@ -7,6 +7,7 @@ This project using ASP NET Core 8.0, SQL Server, HTML, CSS, Javascript.
   + Asp .NET Core Identity for authentication and secure
   + Register with email confirmation and login with forget password support.
   + Sending mail to get in touch and contact.
+  + Online payment with Paypal
 Admin acount infomations:
   + Username: sysadmin
   + Password: password
